@@ -1,4 +1,22 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿const socket = new WebSocket('wss://ws.finnhub.io?token=');
 
-// Write your JavaScript code.
+// Connection opened -> Subscribe
+socket.addEventListener('open', function (event) {
+    socket.send(JSON.stringify({ 'type': 'subscribe', 'symbol': 'AAPL' }))
+    socket.send(JSON.stringify({ 'type': 'subscribe', 'symbol': 'RBLX' }))
+    socket.send(JSON.stringify({ 'type': 'subscribe', 'symbol': 'TSLA' }))
+});
+
+// Listen for messages
+socket.addEventListener('message', function (event) {
+    console.log('Message from server ', event.data);
+});
+
+// Unsubscribe
+var unsubscribe = function(symbol) {
+    socket.send(JSON.stringify({ 'type': 'unsubscribe', 'symbol': symbol }))
+}
+
+window.addEventListener("beforeunload", () => {
+    CurrentSocket.close();
+});
