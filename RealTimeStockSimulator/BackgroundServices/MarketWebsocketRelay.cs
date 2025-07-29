@@ -1,4 +1,6 @@
 ﻿
+using Microsoft.AspNetCore.SignalR;
+using RealTimeStockSimulator.Hubs;
 using RealTimeStockSimulator.Models;
 using System.Net.WebSockets;
 using System.Text;
@@ -13,17 +15,19 @@ namespace RealTimeStockSimulator.BackgroundServices
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
 
-        private readonly string _stockMarketApiKey;
+        private string? _marketApiKey;
+        private IHubContext<MarketHub> _hubContext;
 
-        public MarketWebsocketRelay(IConfiguration configuration)
+        public MarketWebsocketRelay(IConfiguration configuration, IHubContext<MarketHub> hubContext)
         {
-            _stockMarketApiKey = configuration.GetValue<string>("ApiKeyStrings:StockMarketApiKey");
+            _marketApiKey = configuration.GetValue<string>("ApiKeyStrings:MarketApiKey");
+            _hubContext = hubContext;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             ClientWebSocket client = new ClientWebSocket();
-            Uri uri = new Uri($"wss://ws.finnhub.io?token={_stockMarketApiKey}");
+            Uri uri = new Uri($"wss://ws.finnhub.io?token={_marketApiKey}");
 
             try
             {
@@ -46,7 +50,7 @@ namespace RealTimeStockSimulator.BackgroundServices
                     WebSocketReceiveResult result = await client.ReceiveAsync(new ArraySegment<byte>(buffer), stoppingToken);
 
                     string message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                    Console.WriteLine(message);
+                    await _hubContext.Clients.All.SendAsync("ReceiveMarketData", message);
                 }
             }
             catch (OperationCanceledException)

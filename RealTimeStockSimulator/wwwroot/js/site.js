@@ -1,22 +1,9 @@
-﻿//const socket = new WebSocket('wss://ws.finnhub.io?token=');
+﻿CurrentConnection = new signalR.HubConnectionBuilder().withUrl("/marketHub").build();
 
-//// Connection opened -> Subscribe
-//socket.addEventListener('open', function (event) {
-//    socket.send(JSON.stringify({ 'type': 'subscribe', 'symbol': 'AAPL' }))
-//    socket.send(JSON.stringify({ 'type': 'subscribe', 'symbol': 'RBLX' }))
-//    socket.send(JSON.stringify({ 'type': 'subscribe', 'symbol': 'TSLA' }))
-//});
-
-//// Listen for messages
-//socket.addEventListener('message', function (event) {
-//    console.log('Message from server ', event.data);
-//});
-
-//// Unsubscribe
-//var unsubscribe = function(symbol) {
-//    socket.send(JSON.stringify({ 'type': 'unsubscribe', 'symbol': symbol }))
-//}
-
-//window.addEventListener("beforeunload", () => {
-//    CurrentSocket.close();
-//});
+CurrentConnection.start();
+CurrentConnection.on("ReceiveMarketData", function (message) {
+    console.log(message);
+});
+window.addEventListener("beforeunload", () => {
+    CurrentSocket.close();
+});

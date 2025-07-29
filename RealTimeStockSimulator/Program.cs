@@ -1,4 +1,5 @@
 using RealTimeStockSimulator.BackgroundServices;
+using RealTimeStockSimulator.Hubs;
 
 namespace RealTimeStockSimulator
 {
@@ -11,6 +12,7 @@ namespace RealTimeStockSimulator
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddHostedService<MarketWebsocketRelay>();
+            builder.Services.AddSignalR();
 
             var app = builder.Build();
 
@@ -32,6 +34,8 @@ namespace RealTimeStockSimulator
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
+            app.MapHub<MarketHub>("/marketHub");
 
             app.Run();
         }
