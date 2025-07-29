@@ -6,7 +6,7 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
 
-namespace RealTimeStockSimulator.BackgroundServices
+namespace RealTimeStockSimulator.Services.BackgroundServices
 {
     public class MarketWebsocketRelay : BackgroundService
     {   
