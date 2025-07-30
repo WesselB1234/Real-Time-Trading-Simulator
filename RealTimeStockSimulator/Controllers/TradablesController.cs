@@ -2,7 +2,7 @@
 
 namespace RealTimeStockSimulator.Controllers
 {
-    public class SymbolsController : Controller
+    public class TradablesController : Controller
     {
         public IActionResult Index()
         {
