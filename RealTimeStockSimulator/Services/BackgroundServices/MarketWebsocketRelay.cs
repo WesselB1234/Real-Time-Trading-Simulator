@@ -50,24 +50,38 @@ namespace RealTimeStockSimulator.Services.BackgroundServices
             }
         }
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        private async Task HandleMarketWebSocketPayload(MarketWebsocketPayload marketPayload, CancellationToken cancellationToken)
+        {
+            Tradable tradable = marketPayload.Data[marketPayload.Data.Count - 1];
+
+
+
+            await _hubContext.Clients.All.SendAsync("ReceiveMarketData", $"{tradable.Symbol}: {tradable.Price}", cancellationToken);
+        }
+
+        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             ClientWebSocket client = new ClientWebSocket();
             Uri uri = new Uri($"wss://ws.finnhub.io?token={_marketApiKey}");
 
             try
             {
-                await client.ConnectAsync(uri, stoppingToken);
-                await SubscribeToTradablesInCache(client, stoppingToken);
+                await client.ConnectAsync(uri, cancellationToken);
+                await SubscribeToTradablesInCache(client, cancellationToken);
 
                 byte[] buffer = new byte[4096];
 
-                while (!stoppingToken.IsCancellationRequested && client.State == WebSocketState.Open)
+                while (!cancellationToken.IsCancellationRequested && client.State == WebSocketState.Open)
                 {
-                    WebSocketReceiveResult result = await client.ReceiveAsync(new ArraySegment<byte>(buffer), stoppingToken);
+                    WebSocketReceiveResult result = await client.ReceiveAsync(new ArraySegment<byte>(buffer), cancellationToken);
 
-                    string message = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                    await _hubContext.Clients.All.SendAsync("ReceiveMarketData", message);
+                    string json = Encoding.UTF8.GetString(buffer, 0, result.Count);
+                    MarketWebsocketPayload? marketPayload = JsonSerializer.Deserialize<MarketWebsocketPayload>(json);
+                    
+                    if (marketPayload != null && marketPayload.Type == "trade")
+                    {
+                        await HandleMarketWebSocketPayload(marketPayload, cancellationToken);
+                    }    
                 }
             }
             catch (OperationCanceledException)
