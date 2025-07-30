@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Caching.Memory;
 using RealTimeStockSimulator.Hubs;
 using RealTimeStockSimulator.Models;
 using System.Net.WebSockets;
@@ -17,11 +18,36 @@ namespace RealTimeStockSimulator.Services.BackgroundServices
 
         private string? _marketApiKey;
         private IHubContext<MarketHub> _hubContext;
+        private IMemoryCache _memoryCache;
 
-        public MarketWebsocketRelay(IConfiguration configuration, IHubContext<MarketHub> hubContext)
+        public MarketWebsocketRelay(IConfiguration configuration, IHubContext<MarketHub> hubContext, IMemoryCache memoryCache)
         {
             _marketApiKey = configuration.GetValue<string>("ApiKeyStrings:MarketApiKey");
             _hubContext = hubContext;
+            _memoryCache = memoryCache;
+        }
+
+        private async Task SubscribeToTradablesInCache(ClientWebSocket client, CancellationToken stoppingToken)
+        {
+            Dictionary<string, Tradable>? tradablesDictionary = (Dictionary<string, Tradable>?)_memoryCache.Get("TradablesDictionary");
+
+            if (tradablesDictionary == null)
+            {
+                return;
+            }
+
+            foreach (KeyValuePair<string, Tradable> entry in tradablesDictionary)
+            {
+                var subscribeRequest = new MarketSubscriptionRequest("subscribe", entry.Value.Symbol);
+                string requestJson = JsonSerializer.Serialize(subscribeRequest, _jsonSerializerOptions);
+
+                await client.SendAsync(
+                    Encoding.UTF8.GetBytes(requestJson),
+                    WebSocketMessageType.Text,
+                    true,
+                    stoppingToken
+                );
+            }
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -32,16 +58,7 @@ namespace RealTimeStockSimulator.Services.BackgroundServices
             try
             {
                 await client.ConnectAsync(uri, stoppingToken);
-
-                var subscribeRequest = new MarketSubscriptionRequest("subscribe", "BINANCE:BTCUSDT");
-                string requestJson = JsonSerializer.Serialize(subscribeRequest, _jsonSerializerOptions);
-
-                await client.SendAsync(
-                    Encoding.UTF8.GetBytes(requestJson),
-                    WebSocketMessageType.Text,
-                    true,
-                    stoppingToken
-                );
+                await SubscribeToTradablesInCache(client, stoppingToken);
 
                 byte[] buffer = new byte[4096];
 

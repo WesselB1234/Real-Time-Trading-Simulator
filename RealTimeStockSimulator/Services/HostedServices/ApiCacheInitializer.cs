@@ -24,8 +24,6 @@ namespace RealTimeStockSimulator.Services.HostedServices
 
             foreach (Tradable tradable in await _tradablesService.GetAllTradablesWithApiDataAsync(cancellationToken))
             {
-                Console.WriteLine(tradable.Symbol);
-                Console.WriteLine(tradable.Price);
                 tradablesDictionary.Add(tradable.Symbol, tradable);
             }
 
