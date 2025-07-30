@@ -52,11 +52,15 @@ namespace RealTimeStockSimulator.Services.BackgroundServices
 
         private async Task HandleMarketWebSocketPayload(MarketWebsocketPayload marketPayload, CancellationToken cancellationToken)
         {
-            Tradable tradable = marketPayload.Data[marketPayload.Data.Count - 1];
+            Tradable responseTradable = marketPayload.Data[marketPayload.Data.Count - 1];
+            Dictionary<string, Tradable>? tradablesDictionary = (Dictionary<string, Tradable>?)_memoryCache.Get("TradablesDictionary");
 
+            if (tradablesDictionary != null)
+            {
+                tradablesDictionary[responseTradable.Symbol].Price = responseTradable.Price;
+            }
 
-
-            await _hubContext.Clients.All.SendAsync("ReceiveMarketData", $"{tradable.Symbol}: {tradable.Price}", cancellationToken);
+            await _hubContext.Clients.All.SendAsync("ReceiveMarketData", $"{responseTradable.Symbol}: {responseTradable.Price}", cancellationToken);
         }
 
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)

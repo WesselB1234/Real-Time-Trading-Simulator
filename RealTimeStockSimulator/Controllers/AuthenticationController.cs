@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using RealTimeStockSimulator.Models;
 
 namespace RealTimeStockSimulator.Controllers
 {
@@ -14,10 +15,11 @@ namespace RealTimeStockSimulator.Controllers
 
         public IActionResult Login()
         {
-            if (_memoryCache.TryGetValue("test", out string? cacheValue))
+            if (_memoryCache.TryGetValue("TradablesDictionary", out Dictionary<string, Tradable>? tradablesDictionary) 
+                && tradablesDictionary.TryGetValue("BINANCE:BTCUSDT", out Tradable? tradable))
             {
-                Console.WriteLine(cacheValue);
-                Console.WriteLine("login");
+                
+                Console.WriteLine(tradable.Price);
             }
 
             return View();
