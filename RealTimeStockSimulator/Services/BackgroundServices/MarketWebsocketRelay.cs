@@ -57,11 +57,15 @@ namespace RealTimeStockSimulator.Services.BackgroundServices
 
             if (tradablesDictionary != null)
             {
-                tradablesDictionary[responseTradable.Symbol].Price = responseTradable.Price;
-            }
+                Tradable tradable = tradablesDictionary[responseTradable.Symbol];
 
-            await _hubContext.Clients.All.SendAsync("ReceiveMarketData", $"{responseTradable.Symbol}: {responseTradable.Price}", cancellationToken);
-        }
+                if(tradable.Price != responseTradable.Price)
+                {
+                    tradable.Price = responseTradable.Price;
+                    await _hubContext.Clients.All.SendAsync("ReceiveMarketData", $"{tradable.Symbol}: {tradable.Price}", cancellationToken);
+                }
+            }
+       }
 
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
