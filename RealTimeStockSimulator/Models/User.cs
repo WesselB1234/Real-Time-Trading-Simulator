@@ -16,5 +16,10 @@
             Password = password;
             Money = money;
         }
+
+        public User()
+        {
+
+        }
     }
 }

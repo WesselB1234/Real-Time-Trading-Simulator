@@ -11,7 +11,7 @@ namespace RealTimeStockSimulator.Repositories
         private User ReadUser(SqlDataReader reader)
         {
             int userId = (int)reader["user_id"];
-            string userName = (string)reader["user_name"];
+            string userName = (string)reader["username"];
             string email = (string)reader["email"];
             string password = (string)reader["password"];
             decimal money = (decimal)reader["money"];
@@ -44,7 +44,9 @@ namespace RealTimeStockSimulator.Repositories
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "SELECT * FROM Users WHERE username = @UserName";
+                string query = "SELECT user_id, username, email, password, money " +
+                    "FROM Users " +
+                    "WHERE username = @UserName";
 
                 SqlCommand command = new SqlCommand(query, connection);
 
@@ -66,7 +68,9 @@ namespace RealTimeStockSimulator.Repositories
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "SELECT * FROM Users WHERE username = @UserName AND password = @Password";
+                string query = "SELECT user_id, username, email, password, money " +
+                    "FROM Users " +
+                    "WHERE username = @UserName AND password = @Password";
 
                 SqlCommand command = new SqlCommand(query, connection);
 
