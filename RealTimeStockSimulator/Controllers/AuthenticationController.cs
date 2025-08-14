@@ -6,11 +6,9 @@ namespace RealTimeStockSimulator.Controllers
 {
     public class AuthenticationController : Controller
     {
-        private IMemoryCache _memoryCache;
-
-        public AuthenticationController(IMemoryCache memoryCache)
+        public AuthenticationController()
         {
-            _memoryCache = memoryCache;
+
         }
 
         public IActionResult Login()
