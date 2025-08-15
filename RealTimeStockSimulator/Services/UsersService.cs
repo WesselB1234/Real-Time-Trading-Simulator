@@ -38,7 +38,7 @@ namespace RealTimeStockSimulator.Services
 
         public User? GetUserByLoginCredentials(string userName, string password)
         {
-            return _usersRepository.GetUserByLoginCredentials(userName, password);
+            return _usersRepository.GetUserByLoginCredentials(userName, HashPassword(password));
         }
 
         public User? GetUserByName(string userName)

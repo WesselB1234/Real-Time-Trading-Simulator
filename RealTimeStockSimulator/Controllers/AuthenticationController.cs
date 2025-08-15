@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using RealTimeStockSimulator.Extensions;
 using RealTimeStockSimulator.Models;
 using RealTimeStockSimulator.Models.ViewModels;
 using RealTimeStockSimulator.Services.Interfaces;
@@ -14,16 +15,26 @@ namespace RealTimeStockSimulator.Controllers
             _usersService = usersService;
         }
 
-        public IActionResult Login()
+        public IActionResult Login(LoginViewModel loginViewModel)
         {
-            return View();
+            return View(loginViewModel);
         }
 
-        public IActionResult LoginIntoAccount()
+        public IActionResult LoginIntoAccount(LoginViewModel loginViewModel)
         {
-            Console.WriteLine("login account");
+            User? user = _usersService.GetUserByLoginCredentials(loginViewModel.UserName, loginViewModel.Password);
 
-            return RedirectToAction("Login");
+            if (user != null)
+            {
+                HttpContext.Session.SetObject("LoggedInUser", user);
+                Console.WriteLine("logged in");
+            }
+            else
+            {
+                Console.WriteLine("User does not exist or password incorrect");
+            }
+
+            return RedirectToAction("Login", loginViewModel);
         }
 
         public IActionResult Register(RegisterViewModel registerViewModel)
@@ -51,6 +62,23 @@ namespace RealTimeStockSimulator.Controllers
             }
 
             return RedirectToAction("Register", registerViewModel);
+        }
+
+        public IActionResult Logout()
+        {
+            User? loggedInUser = HttpContext.Session.GetObject<User>("LoggedInUser");
+
+            if (loggedInUser != null)
+            {
+                HttpContext.Session.Remove("LoggedInUser");
+                Console.WriteLine("Logged out");
+            }
+            else
+            {
+                Console.WriteLine("not logged in");
+            }
+
+            return View("Login");
         }
     }
 }
