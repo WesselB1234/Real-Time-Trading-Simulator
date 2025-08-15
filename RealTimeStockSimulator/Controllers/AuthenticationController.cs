@@ -56,7 +56,7 @@ namespace RealTimeStockSimulator.Controllers
                 _usersService.AddUser(user);
                 TempData["ConfirmationMessage"] = "Successfully registered a new account.";
 
-                RedirectToAction("Login");
+                return RedirectToAction("Login");
             }
             catch (Exception ex)
             {

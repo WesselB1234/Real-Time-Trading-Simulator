@@ -7,7 +7,7 @@
 <partial name="_ConfirmMessage" />
 <partial name="_ErrorMessage" />
 
-<form method="post" action="/Authentication/RegisterNewAccount">
+<form method="post" action="/Authentication/RegisterNewAccount" onsubmit="return onRegister();">
 
     <label for="username">Username:</label>
     <input type="text" id="username" name="username" placeholder="Your username" required value="@Model?.UserName" />
@@ -23,3 +23,5 @@
 
     <input type="submit" value="Register" />
 </form>
+
+<script src="~/js/Register.js"></script>
