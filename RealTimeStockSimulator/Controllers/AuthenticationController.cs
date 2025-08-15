@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 using RealTimeStockSimulator.Extensions;
 using RealTimeStockSimulator.Models;
 using RealTimeStockSimulator.Models.ViewModels;
@@ -7,7 +6,7 @@ using RealTimeStockSimulator.Services.Interfaces;
 
 namespace RealTimeStockSimulator.Controllers
 {
-    public class AuthenticationController : Controller
+    public class AuthenticationController : BaseController
     {
         private IUsersService _usersService;
         public AuthenticationController(IUsersService usersService)
@@ -27,11 +26,11 @@ namespace RealTimeStockSimulator.Controllers
             if (user != null)
             {
                 HttpContext.Session.SetObject("LoggedInUser", user);
-                Console.WriteLine("logged in");
+                TempData["ConfirmationMessage"] = "Successfully logged in.";
             }
             else
             {
-                Console.WriteLine("User does not exist or password incorrect");
+                TempData["ErrorMessage"] = "User does not exist or password incorrect.";
             }
 
             return RedirectToAction("Login", loginViewModel);
@@ -54,11 +53,14 @@ namespace RealTimeStockSimulator.Controllers
                     Money = 0
                 };
 
-                User? addedUser = _usersService.AddUser(user);
+                _usersService.AddUser(user);
+                TempData["ConfirmationMessage"] = "Successfully registered a new account.";
+
+                RedirectToAction("Login");
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                TempData["ErrorMessage"] = ex.Message;
             }
 
             return RedirectToAction("Register", registerViewModel);
@@ -66,19 +68,17 @@ namespace RealTimeStockSimulator.Controllers
 
         public IActionResult Logout()
         {
-            User? loggedInUser = HttpContext.Session.GetObject<User>("LoggedInUser");
-
-            if (loggedInUser != null)
+            if (LoggedInUser != null)
             {
                 HttpContext.Session.Remove("LoggedInUser");
-                Console.WriteLine("Logged out");
+                TempData["ConfirmationMessage"] = "Successfully logged out.";
             }
             else
             {
-                Console.WriteLine("not logged in");
+                TempData["ErrorMessage"] = "You are not logged in.";
             }
 
-            return View("Login");
+            return RedirectToAction("Login");
         }
     }
 }
