@@ -26,12 +26,11 @@ namespace RealTimeStockSimulator.Controllers
             if (user != null)
             {
                 HttpContext.Session.SetObject("LoggedInUser", user);
-                TempData["ConfirmationMessage"] = "Successfully logged in.";
+
+                return RedirectToAction("Index", "Portfolio");
             }
-            else
-            {
-                TempData["ErrorMessage"] = "User does not exist or password incorrect.";
-            }
+
+            TempData["ErrorMessage"] = "User does not exist or password incorrect.";
 
             return RedirectToAction("Login", loginViewModel);
         }
