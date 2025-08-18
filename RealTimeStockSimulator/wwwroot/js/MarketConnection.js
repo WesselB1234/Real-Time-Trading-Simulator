@@ -1,6 +1,13 @@
 ﻿
 function OnMarketData(message) {
-    console.log(message);
+
+    const tradableUpdatePayload = JSON.parse(message);
+    const tradablePriceInfos = tradableUpdatePayload["TradablePriceInfos"];
+    const symbol = tradableUpdatePayload["Symbol"];
+    const price = tradablePriceInfos["Price"];
+
+    console.log(symbol);
+    console.log(price);
 }
 
 function init() {
@@ -13,3 +20,5 @@ function init() {
         CurrentSocket.close();
     });
 }
+
+init();
