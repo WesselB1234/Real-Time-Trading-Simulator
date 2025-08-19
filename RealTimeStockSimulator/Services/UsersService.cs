@@ -24,7 +24,7 @@ namespace RealTimeStockSimulator.Services
             }
         }
 
-        public User AddUser(User user)
+        public int AddUser(User user)
         {
             if (GetUserByName(user.UserName) != null)
             {

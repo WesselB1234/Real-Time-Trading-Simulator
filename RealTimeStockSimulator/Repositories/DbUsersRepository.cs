@@ -19,7 +19,7 @@ namespace RealTimeStockSimulator.Repositories
             return new User(userId, userName, email, password, money);
         }
 
-        public User AddUser(User user)
+        public int AddUser(User user)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -34,9 +34,14 @@ namespace RealTimeStockSimulator.Repositories
                 command.Parameters.AddWithValue("@Money", user.Money);
 
                 command.Connection.Open();
-                user.UserId = Convert.ToInt32(command.ExecuteScalar());
+                int? userId = Convert.ToInt32(command.ExecuteScalar());
 
-                return user;
+                if (userId == null)
+                {
+                    throw new Exception("Insert user did not return a UserId.");
+                }
+
+                return (int)userId;
             }
         }
 
