@@ -19,6 +19,7 @@ namespace RealTimeStockSimulator.Services.BackgroundServices
         private string? _marketApiKey;
         private IHubContext<MarketHub> _hubContext;
         private IMemoryCache _memoryCache;
+        private Dictionary<string, TradablePriceInfos> _tradablePriceInfosDictionary = new Dictionary<string, TradablePriceInfos>();
 
         public MarketWebsocketRelay(IConfiguration configuration, IHubContext<MarketHub> hubContext, IMemoryCache memoryCache)
         {
@@ -29,9 +30,7 @@ namespace RealTimeStockSimulator.Services.BackgroundServices
 
         private async Task SubscribeToTradablesInCache(ClientWebSocket client)
         {
-            Dictionary<string, TradablePriceInfos> tradablePriceInfosDictionary = GetTradablePriceInfosDictionary();
-
-            foreach (KeyValuePair<string, TradablePriceInfos> entry in tradablePriceInfosDictionary)
+            foreach (KeyValuePair<string, TradablePriceInfos> entry in _tradablePriceInfosDictionary)
             {
                 var subscribeRequest = new MarketSubscriptionRequest("subscribe", entry.Key);
                 string requestJson = JsonSerializer.Serialize(subscribeRequest, _jsonSerializerOptions);
@@ -43,8 +42,7 @@ namespace RealTimeStockSimulator.Services.BackgroundServices
         private async Task HandleMarketWebSocketPayload(MarketWebsocketPayload marketPayload)
         {
             MarketWebsocketTradable responseTradable = marketPayload.Data[marketPayload.Data.Count - 1];
-            Dictionary<string, TradablePriceInfos> tradablePriceInfosDictionary = GetTradablePriceInfosDictionary();
-            TradablePriceInfos tradablePriceInfos = tradablePriceInfosDictionary[responseTradable.Symbol];
+            TradablePriceInfos tradablePriceInfos = _tradablePriceInfosDictionary[responseTradable.Symbol];
 
             if (responseTradable.Price != null && tradablePriceInfos.Price != responseTradable.Price)
             {
@@ -73,6 +71,8 @@ namespace RealTimeStockSimulator.Services.BackgroundServices
 
             try
             {
+                _tradablePriceInfosDictionary = GetTradablePriceInfosDictionary();
+
                 Uri uri = new Uri($"wss://ws.finnhub.io?token={_marketApiKey}");
 
                 await client.ConnectAsync(uri, CancellationToken.None);

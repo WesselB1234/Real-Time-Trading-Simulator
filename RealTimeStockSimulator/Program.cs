@@ -1,4 +1,6 @@
 using RealTimeStockSimulator.Hubs;
+using RealTimeStockSimulator.Models;
+using RealTimeStockSimulator.Models.Interfaces;
 using RealTimeStockSimulator.Repositories;
 using RealTimeStockSimulator.Repositories.Interfaces;
 using RealTimeStockSimulator.Services;
@@ -23,6 +25,8 @@ namespace RealTimeStockSimulator
 
             builder.Services.AddSingleton<ITradablesService, TradablesService>();
             builder.Services.AddSingleton<IUsersService, UsersService>();
+
+            builder.Services.AddSingleton<IStringFormatter, StringFormatter>();
 
             builder.Services.AddHostedService<ApiCacheInitializer>();
             builder.Services.AddHostedService<MarketWebsocketRelay>();
