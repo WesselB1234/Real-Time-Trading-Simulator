@@ -79,18 +79,24 @@ namespace RealTimeStockSimulator.Services.BackgroundServices
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             ClientWebSocket client = new ClientWebSocket();
-            Uri uri = new Uri($"wss://ws.finnhub.io?token={_marketApiKey}");
 
             try
             {
+                Uri uri = new Uri($"wss://ws.finnhub.io?token={_marketApiKey}");
+
                 await client.ConnectAsync(uri, cancellationToken);
                 await SubscribeToTradablesInCache(client, cancellationToken);
 
                 byte[] buffer = new byte[4096];
-
+ 
                 while (!cancellationToken.IsCancellationRequested && client.State == WebSocketState.Open)
                 {
-                    WebSocketReceiveResult result = await client.ReceiveAsync(new ArraySegment<byte>(buffer), cancellationToken);
+                    WebSocketReceiveResult result = await client.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+
+                    if (result.MessageType == WebSocketMessageType.Close)
+                    {
+                        break;
+                    }
 
                     string json = Encoding.UTF8.GetString(buffer, 0, result.Count);
                     MarketWebsocketPayload? marketPayload = JsonSerializer.Deserialize<MarketWebsocketPayload>(json);
@@ -101,29 +107,22 @@ namespace RealTimeStockSimulator.Services.BackgroundServices
                     }
                 }
             }
-            catch (OperationCanceledException)
+            catch (Exception ex)
             {
-                // Expected when stoppingToken is cancelled — graceful shutdown
+                Console.WriteLine($"Market websocket error: {ex.Message}");
             }
-            catch (WebSocketException ex)
-            {
-                Console.WriteLine($"WebSocket error: {ex.Message}");
-            }
-            finally
-            {
-                if (client.State == WebSocketState.Open || client.State == WebSocketState.CloseReceived)
-                {
-                    try
-                    {
-                        await client.CloseAsync(WebSocketCloseStatus.NormalClosure, "Session completed!", CancellationToken.None);
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Error closing WebSocket: {ex.Message}");
-                    }
-                }
 
-                Console.WriteLine("WebSocket closed. Background service stopping.");
+            try
+            {
+                if (client.State == WebSocketState.Open)
+                {
+                    await client.CloseAsync(WebSocketCloseStatus.NormalClosure, "Session completed!", CancellationToken.None);
+                    Console.WriteLine("Successfully closed the market websocket.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Market websocket closing error: {ex.Message}");
             }
         }
     }

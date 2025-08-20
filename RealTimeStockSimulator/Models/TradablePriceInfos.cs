@@ -8,7 +8,7 @@ namespace RealTimeStockSimulator.Models
         public decimal Price { get; set; }
 
         [JsonPropertyName("c")]
-        public decimal Price2 {
+        public decimal PriceAlias {
             get
             {
                 return Price;
