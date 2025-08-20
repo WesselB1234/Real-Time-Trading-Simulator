@@ -27,7 +27,7 @@ namespace RealTimeStockSimulator.Services.BackgroundServices
             _memoryCache = memoryCache;
         }
 
-        private async Task SubscribeToTradablesInCache(ClientWebSocket client, CancellationToken stoppingToken)
+        private async Task SubscribeToTradablesInCache(ClientWebSocket client)
         {
             Dictionary<string, TradablePriceInfos> tradablePriceInfosDictionary = GetTradablePriceInfosDictionary();
 
@@ -36,16 +36,11 @@ namespace RealTimeStockSimulator.Services.BackgroundServices
                 var subscribeRequest = new MarketSubscriptionRequest("subscribe", entry.Key);
                 string requestJson = JsonSerializer.Serialize(subscribeRequest, _jsonSerializerOptions);
 
-                await client.SendAsync(
-                    Encoding.UTF8.GetBytes(requestJson),
-                    WebSocketMessageType.Text,
-                    true,
-                    stoppingToken
-                );
+                await client.SendAsync(Encoding.UTF8.GetBytes(requestJson), WebSocketMessageType.Text, true, CancellationToken.None);
             }
         }
 
-        private async Task HandleMarketWebSocketPayload(MarketWebsocketPayload marketPayload, CancellationToken cancellationToken)
+        private async Task HandleMarketWebSocketPayload(MarketWebsocketPayload marketPayload)
         {
             MarketWebsocketTradable responseTradable = marketPayload.Data[marketPayload.Data.Count - 1];
             Dictionary<string, TradablePriceInfos> tradablePriceInfosDictionary = GetTradablePriceInfosDictionary();
@@ -56,11 +51,7 @@ namespace RealTimeStockSimulator.Services.BackgroundServices
                 tradablePriceInfos.Price = (decimal)responseTradable.Price;
                 TradableUpdatePayload tradableUpdatePayload = new TradableUpdatePayload(responseTradable.Symbol, tradablePriceInfos);
 
-                await _hubContext.Clients.All.SendAsync(
-                    "ReceiveMarketData", 
-                    JsonSerializer.Serialize(tradableUpdatePayload), 
-                    cancellationToken
-                );
+                await _hubContext.Clients.All.SendAsync("ReceiveMarketData", JsonSerializer.Serialize(tradableUpdatePayload), CancellationToken.None);
             }
         }
 
@@ -84,8 +75,8 @@ namespace RealTimeStockSimulator.Services.BackgroundServices
             {
                 Uri uri = new Uri($"wss://ws.finnhub.io?token={_marketApiKey}");
 
-                await client.ConnectAsync(uri, cancellationToken);
-                await SubscribeToTradablesInCache(client, cancellationToken);
+                await client.ConnectAsync(uri, CancellationToken.None);
+                await SubscribeToTradablesInCache(client);
 
                 byte[] buffer = new byte[4096];
  
@@ -103,7 +94,7 @@ namespace RealTimeStockSimulator.Services.BackgroundServices
 
                     if (marketPayload != null && marketPayload.Type == "trade")
                     {
-                        await HandleMarketWebSocketPayload(marketPayload, cancellationToken);
+                        await HandleMarketWebSocketPayload(marketPayload);
                     }
                 }
             }
