@@ -19,6 +19,8 @@ namespace RealTimeStockSimulator.Models
             } 
         }
 
+        public string? FormattedPrice { get; set; }
+
         public TradablePriceInfos(decimal price)
         {
             Price = price;

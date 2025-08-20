@@ -4,12 +4,12 @@ function OnMarketData(message) {
     const tradableUpdatePayload = JSON.parse(message);
     const tradablePriceInfos = tradableUpdatePayload["TradablePriceInfos"];
     const symbol = tradableUpdatePayload["Symbol"];
-    const price = tradablePriceInfos["Price"];
+    const formattedPrice = tradablePriceInfos["FormattedPrice"];
 
     const priceLabelsOfSymbol = document.getElementsByClassName("TradablePrice_" + symbol);
 
     for (let priceLabel of priceLabelsOfSymbol) {
-        priceLabel.textContent = price + "$";
+        priceLabel.textContent = "$" + formattedPrice;
     }
 }
 

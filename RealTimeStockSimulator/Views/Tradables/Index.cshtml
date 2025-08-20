@@ -36,7 +36,8 @@
                         @{
                             if (tradable.TradablePriceInfos != null)
                             {
-                                @stringFormatter.FormatDecimalPrice(tradable.TradablePriceInfos.Price);
+                                string priceLabel = $"${stringFormatter.FormatDecimalPrice(tradable.TradablePriceInfos.Price)}";
+                                @priceLabel
                             }
                         }
                     </td>
