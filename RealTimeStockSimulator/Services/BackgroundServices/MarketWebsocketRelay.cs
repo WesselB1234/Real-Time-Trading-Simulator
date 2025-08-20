@@ -20,7 +20,7 @@ namespace RealTimeStockSimulator.Services.BackgroundServices
         private string? _marketApiKey;
         private IHubContext<MarketHub> _hubContext;
         private IMemoryCache _memoryCache;
-        private Dictionary<string, TradablePriceInfos> _tradablePriceInfosDictionary = new Dictionary<string, TradablePriceInfos>();
+        private Dictionary<string, TradablePriceInfos> _tradablePriceInfosDictionary;
         private IStringFormatter _stringFormatter;
 
         public MarketWebsocketRelay(IConfiguration configuration, IHubContext<MarketHub> hubContext, IMemoryCache memoryCache, IStringFormatter stringFormatter)
@@ -65,7 +65,7 @@ namespace RealTimeStockSimulator.Services.BackgroundServices
             }
             else
             {
-                throw new Exception("TradablesPriceInfosDictionary does not exist.");
+                throw new Exception("TradablesPriceInfosDictionary does not exist in cache.");
             }
         }
 
