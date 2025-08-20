@@ -124,6 +124,8 @@ namespace RealTimeStockSimulator.Services.BackgroundServices
             {
                 Console.WriteLine($"Market websocket closing error: {ex.Message}");
             }
+
+            client.Dispose();
         }
     }
 }
