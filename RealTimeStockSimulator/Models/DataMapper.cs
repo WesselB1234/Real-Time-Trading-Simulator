@@ -23,5 +23,13 @@ namespace RealTimeStockSimulator.Models
 
             return new Tradable(symbol);
         }
+
+        public OwnershipTradable MapOwnershipTradable(SqlDataReader reader)
+        {
+            string symbol = (string)reader["symbol"];
+            int amount = (int)reader["amount"];
+
+            return new OwnershipTradable(symbol, amount);
+        }
     }
 }

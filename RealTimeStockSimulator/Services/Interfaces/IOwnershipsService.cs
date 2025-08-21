@@ -1,8 +1,8 @@
 ﻿using RealTimeStockSimulator.Models;
 
-namespace RealTimeStockSimulator.Repositories.Interfaces
+namespace RealTimeStockSimulator.Services.Interfaces
 {
-    public interface IOwnershipRepository
+    public interface IOwnershipsService
     {
         Ownership GetOwnershipByUser(User user);
     }

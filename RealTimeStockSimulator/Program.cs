@@ -22,15 +22,17 @@ namespace RealTimeStockSimulator
 
             builder.Services.AddSingleton<ITradablesRepository, DbTradablesRepository>();
             builder.Services.AddSingleton<IUsersRepository, DbUsersRepository>();
+            builder.Services.AddSingleton<IOwnershipsRepository, DbOwnershipRepository>();
 
             builder.Services.AddSingleton<ITradablesService, TradablesService>();
             builder.Services.AddSingleton<IUsersService, UsersService>();
+            builder.Services.AddSingleton<IOwnershipsService, OwnershipsService>();
 
             builder.Services.AddSingleton<IStringFormatter, StringFormatter>();
             builder.Services.AddSingleton<IDataMapper, DataMapper>();
 
             builder.Services.AddHostedService<ApiCacheInitializer>();
-            builder.Services.AddHostedService<MarketWebsocketRelay>();
+            //builder.Services.AddHostedService<MarketWebsocketRelay>();
 
             builder.Services.AddSession(options =>
             {

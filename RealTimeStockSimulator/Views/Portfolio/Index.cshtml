@@ -1,5 +1,5 @@
 ﻿@{
-    @model List<Tradable>;
+    @model Ownership
     @inject RealTimeStockSimulator.Models.Interfaces.IStringFormatter stringFormatter
 
     ViewData["title"] = "Portfolio";
@@ -21,6 +21,9 @@
                     Symbol
                 </th>
                 <th>
+                    Amount owned
+                </th>
+                <th>
                     Price
                 </th>
                 <th>
@@ -29,28 +32,32 @@
             </tr>
         </thead>
         <tbody>
-            @* @foreach (Tradable tradable in Model) *@
-            @* { *@
-            @*     <tr> *@
-            @*         <td> *@
-            @*             @tradable.Symbol *@
-            @*         </td> *@
-            @*         <td class="TradablePrice_@tradable.Symbol"> *@
-            @*             @{ *@
-            @*                 if (tradable.TradablePriceInfos != null) *@
-            @*                 { *@
-            @*                     string priceLabel = $"${stringFormatter.FormatDecimalPrice(tradable.TradablePriceInfos.Price)}"; *@
-            @*                     @priceLabel *@
-            @*                 } *@
-            @*             } *@
-            @*         </td> *@
-            @*         <td> *@
-            @*             <a href="/Tradables/Buy?Symbol=@tradable.Symbol">Buy</a> *@
-            @*             | *@
-            @*             <a href="/Tradables/Sell?Symbol=@tradable.Symbol">Sell</a> *@
-            @*         </td> *@
-            @*     </tr> *@
-            @* } *@
+            @{foreach (OwnershipTradable tradable in Model.Tradables)    
+            {
+                <tr> 
+                    <td> 
+                        @tradable.Symbol    
+                    </td>    
+                    <td>
+                        @tradable.Amount
+                    </td>
+                    <td class="TradablePrice_@tradable.Symbol">    
+                        @{    
+                            if (tradable.TradablePriceInfos != null)    
+                            {    
+                                string priceLabel = $"${stringFormatter.FormatDecimalPrice(tradable.TradablePriceInfos.Price)}";    
+                                @priceLabel    
+                            }    
+                        }    
+                    </td>    
+                    <td>    
+                        <a href="/Tradables/Buy?Symbol=@tradable.Symbol">Buy</a>    
+                        |    
+                        <a href="/Tradables/Sell?Symbol=@tradable.Symbol">Sell</a>    
+                    </td>    
+                </tr>    
+                }  
+            }
         </tbody>
     </table>
 </main>

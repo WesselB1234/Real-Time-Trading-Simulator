@@ -16,7 +16,7 @@ namespace RealTimeStockSimulator.Controllers
 
         public IActionResult Login(LoginViewModel loginViewModel)
         {
-            return View(loginViewModel);
+            return View(loginViewModel); 
         }
 
         public IActionResult LoginIntoAccount(LoginViewModel loginViewModel)
