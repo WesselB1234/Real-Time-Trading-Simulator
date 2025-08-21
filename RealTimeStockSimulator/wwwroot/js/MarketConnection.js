@@ -34,6 +34,10 @@ function OnMarketData(message) {
     for (let priceLabel of priceLabelsOfSymbol) {
         UpdatePriceLabel(priceLabel, symbol, price);
     }
+
+    if (ownershipJson !== null) {
+        console.log("let it become da owner");
+    }
 }
 
 function init() {
