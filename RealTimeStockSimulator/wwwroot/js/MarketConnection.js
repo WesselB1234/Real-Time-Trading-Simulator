@@ -1,15 +1,21 @@
-﻿
+﻿function FormatPrice(price) {
+    return price.toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+    });
+}
+
 function OnMarketData(message) {
 
     const tradableUpdatePayload = JSON.parse(message);
     const tradablePriceInfos = tradableUpdatePayload["TradablePriceInfos"];
     const symbol = tradableUpdatePayload["Symbol"];
-    const formattedPrice = tradablePriceInfos["FormattedPrice"];
+    const price = tradablePriceInfos["Price"];
 
     const priceLabelsOfSymbol = document.getElementsByClassName("TradablePrice_" + symbol);
 
     for (let priceLabel of priceLabelsOfSymbol) {
-        priceLabel.textContent = "$" + formattedPrice;
+        priceLabel.textContent = FormatPrice(price);
     }
 }
 

@@ -21,14 +21,12 @@ namespace RealTimeStockSimulator.Services.BackgroundServices
         private IHubContext<MarketHub> _hubContext;
         private IMemoryCache _memoryCache;
         private Dictionary<string, TradablePriceInfos> _tradablePriceInfosDictionary;
-        private IStringFormatter _stringFormatter;
 
-        public MarketWebsocketRelay(IConfiguration configuration, IHubContext<MarketHub> hubContext, IMemoryCache memoryCache, IStringFormatter stringFormatter)
+        public MarketWebsocketRelay(IConfiguration configuration, IHubContext<MarketHub> hubContext, IMemoryCache memoryCache)
         {
             _marketApiKey = configuration.GetValue<string>("ApiKeyStrings:MarketApiKey");
             _hubContext = hubContext;
             _memoryCache = memoryCache;
-            _stringFormatter = stringFormatter;
         }
 
         private async Task SubscribeToTradablesInCache(ClientWebSocket client)
@@ -50,7 +48,6 @@ namespace RealTimeStockSimulator.Services.BackgroundServices
             if (responseTradable.Price != null && tradablePriceInfos.Price != responseTradable.Price)
             {
                 tradablePriceInfos.Price = (decimal)responseTradable.Price;
-                tradablePriceInfos.FormattedPrice = _stringFormatter.FormatDecimalPrice(tradablePriceInfos.Price);
                 TradableUpdatePayload tradableUpdatePayload = new TradableUpdatePayload(responseTradable.Symbol, tradablePriceInfos);
 
                 await _hubContext.Clients.All.SendAsync("ReceiveMarketData", JsonSerializer.Serialize(tradableUpdatePayload), CancellationToken.None);
