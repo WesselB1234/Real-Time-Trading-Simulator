@@ -12,7 +12,7 @@
         Portfolio
     </h1>
     <h2>
-        Total value: 121212
+        Total value: $@stringFormatter.FormatDecimalPrice(@Model.TotalOwnershipValue)
     </h2>
     <table class="table">
         <thead>
@@ -45,7 +45,7 @@
                         @{    
                             if (tradable.TradablePriceInfos != null)    
                             {    
-                                string priceLabel = $"${stringFormatter.FormatDecimalPrice(tradable.TradablePriceInfos.Price)}";    
+                                string priceLabel = $"${stringFormatter.FormatDecimalPrice(tradable.TotalValue)}";    
                                 @priceLabel    
                             }    
                         }    
