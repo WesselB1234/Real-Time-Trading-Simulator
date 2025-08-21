@@ -32,7 +32,7 @@ namespace RealTimeStockSimulator
             builder.Services.AddSingleton<IDataMapper, DataMapper>();
 
             builder.Services.AddHostedService<ApiCacheInitializer>();
-            //builder.Services.AddHostedService<MarketWebsocketRelay>();
+            builder.Services.AddHostedService<MarketWebsocketRelay>();
 
             builder.Services.AddSession(options =>
             {

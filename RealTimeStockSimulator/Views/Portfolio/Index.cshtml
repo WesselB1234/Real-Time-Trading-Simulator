@@ -38,10 +38,10 @@
                     <td> 
                         @tradable.Symbol    
                     </td>    
-                    <td>
+                    <td id="TradableAmount_1_@tradable.Symbol">
                         @tradable.Amount
                     </td>
-                    <td class="TradablePrice_@tradable.Symbol">    
+                    <td class="TradablePrice_@tradable.Symbol" id="1">    
                         @{    
                             if (tradable.TradablePriceInfos != null)    
                             {    

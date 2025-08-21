@@ -5,6 +5,23 @@
     });
 }
 
+function IsNumber(value) {
+    return !isNaN(parseFloat(value)) && isFinite(value);
+}
+
+function UpdatePriceLabel(priceLabel, symbol, price) {
+
+    if (IsNumber(priceLabel.id) != false) {
+
+        const amountLabel = document.getElementById("TradableAmount_" + priceLabel.id + "_" + symbol);
+        const amount = parseInt(amountLabel.textContent);
+
+        price *= amount;
+    } 
+
+    priceLabel.textContent = FormatPrice(price);
+}
+
 function OnMarketData(message) {
 
     const tradableUpdatePayload = JSON.parse(message);
@@ -15,7 +32,7 @@ function OnMarketData(message) {
     const priceLabelsOfSymbol = document.getElementsByClassName("TradablePrice_" + symbol);
 
     for (let priceLabel of priceLabelsOfSymbol) {
-        priceLabel.textContent = FormatPrice(price);
+        UpdatePriceLabel(priceLabel, symbol, price);
     }
 }
 
