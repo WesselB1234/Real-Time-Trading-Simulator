@@ -11,9 +11,9 @@ function IsNumber(value) {
 
 function UpdatePriceLabel(priceLabel, symbol, price) {
 
-    if (IsNumber(priceLabel.id) != false) {
+    if (IsNumber(priceLabel.dataset.labelNumber) != false) {
 
-        const amountLabel = document.getElementById("TradableAmount_" + priceLabel.id + "_" + symbol);
+        const amountLabel = document.getElementById("TradableAmount_" + priceLabel.dataset.labelNumber + "_" + symbol);
         const amount = parseInt(amountLabel.textContent);
 
         price *= amount;
