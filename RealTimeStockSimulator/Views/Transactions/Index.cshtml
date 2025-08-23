@@ -1,7 +1,8 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    @model RealTimeStockSimulator.Models.MarketTransactions
+    @inject RealTimeStockSimulator.Models.Interfaces.IStringFormatter stringFormatter
+
+    ViewData["title"] = "Transactions";
 }
 
 <partial name="_Navbar" />
@@ -28,7 +29,25 @@
             </tr>
         </thead>
         <tbody>
-            
+            @{
+                foreach(MarketTransactionTradable transaction in Model.Transactions)
+                {
+                    <tr>
+                        <td>
+                            @transaction.Tradable.Symbol
+                        </td>
+                        <td>
+                            $@stringFormatter.FormatDecimalPrice(transaction.Price)
+                        </td>
+                        <td>
+                            @transaction.Status
+                        </td>
+                        <td>
+                            @transaction.Amount
+                        </td>
+                    </tr>
+                }
+            }
         </tbody>
     </table>
 </main>

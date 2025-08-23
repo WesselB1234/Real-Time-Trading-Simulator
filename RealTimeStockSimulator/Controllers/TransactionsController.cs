@@ -1,12 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using RealTimeStockSimulator.Models;
+using RealTimeStockSimulator.Services.Interfaces;
 
 namespace RealTimeStockSimulator.Controllers
 {
     public class TransactionsController : BaseController
     {
+        private IMarketTransactionsService _marketTransactionsService;
+        public TransactionsController(IMarketTransactionsService marketTransactionsService)
+        {
+            _marketTransactionsService = marketTransactionsService;
+        }
+
         public IActionResult Index()
         {
-            return View();
+            MarketTransactions transactions = _marketTransactionsService.GetTransactionsByUser(LoggedInUser);
+
+            return View(transactions);
         }
     }
 }

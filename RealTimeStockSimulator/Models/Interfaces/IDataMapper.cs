@@ -7,5 +7,6 @@ namespace RealTimeStockSimulator.Models.Interfaces
         User MapUser(SqlDataReader reader);
         Tradable MapTradable(SqlDataReader reader);
         OwnershipTradable MapOwnershipTradable(SqlDataReader reader);
+        MarketTransactionTradable MapMarketTransactionTradable(SqlDataReader reader);
     }
 }

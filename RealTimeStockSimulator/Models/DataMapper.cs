@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.SqlClient;
+using RealTimeStockSimulator.Models.Enums;
 using RealTimeStockSimulator.Models.Interfaces;
 using System.Data;
 
@@ -30,6 +31,16 @@ namespace RealTimeStockSimulator.Models
             int amount = (int)reader["amount"];
 
             return new OwnershipTradable(symbol, amount);
+        }
+
+        public MarketTransactionTradable MapMarketTransactionTradable(SqlDataReader reader)
+        {
+            Tradable tradable = MapTradable(reader);
+            decimal price = (decimal)reader["price"];
+            MarketTransactionStatus status = (MarketTransactionStatus)Enum.Parse(typeof(MarketTransactionStatus), (string)reader["status"]);
+            int amount = (int)reader["amount"];
+
+            return new MarketTransactionTradable(tradable, price, status, amount);
         }
     }
 }
