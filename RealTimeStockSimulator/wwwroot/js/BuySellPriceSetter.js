@@ -1,16 +1,19 @@
-﻿function OnAmountChanged(newAmount) {
+﻿function OnAmountChanged(amountInput, totalValueLbl, newAmount) {
 
     if (newAmount > 0) {
-        console.log(newAmount);
+        amountInput.dataset.amountLabelValue = newAmount;
+        console.log(totalValueLbl.dataset.price * newAmount);
+        totalValueLbl.textContent = FormatPrice(totalValueLbl.dataset.price * newAmount);
     }
 }
 
 function InitBuySellPriceSetter() {
 
     let amountInput = document.getElementById("amount");
+    let totalValueLbl = document.getElementById("totalValueLbl");
 
     amountInput.addEventListener("input", (event) => {
-        OnAmountChanged(Number(event.target.value));
+        OnAmountChanged(amountInput, totalValueLbl, Number(event.target.value));
     });
 }
 

@@ -32,7 +32,7 @@
                     <td>
                         @tradable.Symbol
                     </td>
-                    <td data-price-symbol="@tradable.Symbol">
+                    <td data-price-symbol="@tradable.Symbol" data-price="@stringFormatter.FormatDecimalToJsDecimal(tradable.TradablePriceInfos.Price)">
                         @{
                             if (tradable.TradablePriceInfos != null)
                             {

@@ -9,5 +9,10 @@ namespace RealTimeStockSimulator.Models
         {
             return price.ToString("#,##0.00", new CultureInfo("en-US"));
         }
+
+        public string FormatDecimalToJsDecimal(decimal price)
+        {
+            return price.ToString(CultureInfo.InvariantCulture);
+        }
     }
 }

@@ -7,6 +7,7 @@ using RealTimeStockSimulator.Services;
 using RealTimeStockSimulator.Services.BackgroundServices;
 using RealTimeStockSimulator.Services.HostedServices;
 using RealTimeStockSimulator.Services.Interfaces;
+using System.Globalization;
 
 namespace RealTimeStockSimulator
 {

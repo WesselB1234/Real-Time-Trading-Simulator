@@ -19,10 +19,14 @@
         Buying @Model.Tradable.Symbol
     </h1>
     <h3>
-        Value of @Model.Tradable.Symbol: <span data-price-symbol="@Model.Tradable.Symbol">$@stringFormatter.FormatDecimalPrice(Model.Tradable.TradablePriceInfos.Price)</span>
+        Value of @Model.Tradable.Symbol: <span data-price-symbol="@Model.Tradable.Symbol" data-price="@stringFormatter.FormatDecimalToJsDecimal((decimal)Model.Tradable.TradablePriceInfos.Price)">
+            $@stringFormatter.FormatDecimalPrice(Model.Tradable.TradablePriceInfos.Price)
+        </span>
     </h3>
     <h3>
-        Total cost of order: <span data-price-symbol="@Model.Tradable.Symbol">$@stringFormatter.FormatDecimalPrice(Model.Tradable.TradablePriceInfos.Price)</span>
+        Total cost of order: <span id="totalValueLbl" data-amount-label-number="1" data-price-symbol="@Model.Tradable.Symbol" data-price="@stringFormatter.FormatDecimalToJsDecimal((decimal)Model.Tradable.TradablePriceInfos.Price)">
+            $@stringFormatter.FormatDecimalPrice(Model.Tradable.TradablePriceInfos.Price * amountValue)
+        </span>
     </h3>
 
     <partial name="_ErrorMessage" />
@@ -31,7 +35,8 @@
         <input type="hidden" name="symbol" value="@Model.Tradable.Symbol"/>
         <div class="mb-2">
             <label class="form-label" for="amount">Amount:</label>
-            <input class="form-control" type="number" id="amount" name="amount" value="@amountValue" required />
+            <input class="form-control" type="number" id="amount" name="amount" value="@amountValue"
+                   data-amount-label-number="1" data-amount-label-symbol="@Model.Tradable.Symbol" data-amount-label-value="@amountValue" required />
         </div>
         <input type="submit" class="btn mb-2 primary-background-color text-white" value="Buy amount" />
     </form>

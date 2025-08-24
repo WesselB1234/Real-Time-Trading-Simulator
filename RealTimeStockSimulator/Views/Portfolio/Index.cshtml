@@ -43,7 +43,7 @@
                         <td data-amount-label-number="1" data-amount-label-symbol="@tradable.Symbol" data-amount-label-value="@tradable.Amount">
                             @tradable.Amount
                         </td>
-                        <td data-price-symbol="@tradable.Symbol" data-amount-label-number="1">
+                        <td data-price-symbol="@tradable.Symbol" data-price="@stringFormatter.FormatDecimalToJsDecimal(tradable.TradablePriceInfos.Price)" data-amount-label-number="1">
                             @{    
                                 if (tradable.TradablePriceInfos != null)    
                                 {    

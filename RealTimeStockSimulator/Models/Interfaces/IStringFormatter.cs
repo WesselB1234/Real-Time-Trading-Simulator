@@ -3,5 +3,6 @@
     public interface IStringFormatter
     {
         string FormatDecimalPrice(decimal price);
+        string FormatDecimalToJsDecimal(decimal value);
     }
 }

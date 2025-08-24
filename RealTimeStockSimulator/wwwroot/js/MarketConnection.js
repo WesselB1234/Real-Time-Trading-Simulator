@@ -10,6 +10,8 @@ function UpdatePriceLabel(updatedSymbol, newPrice) {
 
     for (let priceLabel of priceLabels) {
 
+        priceLabel.dataset.price = newPrice;
+
         if (IsNumber(priceLabel.dataset.amountLabelNumber) != false) {
 
             const amountLabel = document.querySelector(
