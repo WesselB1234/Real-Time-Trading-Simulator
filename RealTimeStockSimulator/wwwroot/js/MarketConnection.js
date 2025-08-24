@@ -11,14 +11,19 @@ function IsNumber(value) {
 
 function UpdatePriceLabel(updatedSymbol, newPrice) {
 
-    const priceLabels = document.getElementsByClassName("TradablePrice_" + updatedSymbol);
+    const priceLabels = document.querySelectorAll(
+        `[data-price-symbol="${updatedSymbol}"]`
+    );
 
     for (let priceLabel of priceLabels) {
 
-        if (IsNumber(priceLabel.dataset.labelNumber) != false) {
+        if (IsNumber(priceLabel.dataset.amountLabelNumber) != false) {
 
-            const amountLabel = document.getElementById("TradableAmount_" + priceLabel.dataset.labelNumber + "_" + updatedSymbol);
-            const amount = parseInt(amountLabel.textContent);
+            const amountLabel = document.querySelector(
+                `[data-amount-label-symbol="${updatedSymbol}"][data-amount-label-number="${priceLabel.dataset.amountLabelNumber}"]`
+            );
+
+            const amount = parseInt(amountLabel.dataset.amountLabelValue);
 
             newPrice *= amount;
         }

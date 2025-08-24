@@ -19,10 +19,10 @@
         Buying @Model.Tradable.Symbol
     </h1>
     <h3>
-        Value of @Model.Tradable.Symbol: <span class="TradablePrice_@Model.Tradable.Symbol">$@stringFormatter.FormatDecimalPrice(Model.Tradable.TradablePriceInfos.Price)</span>
+        Value of @Model.Tradable.Symbol: <span data-price-symbol="@Model.Tradable.Symbol">$@stringFormatter.FormatDecimalPrice(Model.Tradable.TradablePriceInfos.Price)</span>
     </h3>
     <h3>
-        Total cost of order: <span class="TradablePrice_@Model.Tradable.Symbol">$@stringFormatter.FormatDecimalPrice(Model.Tradable.TradablePriceInfos.Price)</span>
+        Total cost of order: <span data-price-symbol="@Model.Tradable.Symbol">$@stringFormatter.FormatDecimalPrice(Model.Tradable.TradablePriceInfos.Price)</span>
     </h3>
 
     <partial name="_ErrorMessage" />

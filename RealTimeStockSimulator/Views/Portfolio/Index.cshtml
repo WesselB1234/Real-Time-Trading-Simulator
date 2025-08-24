@@ -25,7 +25,7 @@
                     Amount owned
                 </th>
                 <th>
-                    Value
+                    Total value
                 </th>
                 <th>
                     Actions
@@ -33,30 +33,31 @@
             </tr>
         </thead>
         <tbody>
-            @{foreach (OwnershipTradable tradable in Model.Tradables)    
-            {
-                <tr> 
-                    <td> 
-                        @tradable.Symbol    
-                    </td>    
-                    <td id="TradableAmount_1_@tradable.Symbol">
-                        @tradable.Amount
-                    </td>
-                        <td class="TradablePrice_@tradable.Symbol" data-label-number="1">
-                        @{    
-                            if (tradable.TradablePriceInfos != null)    
-                            {    
-                                string priceLabel = $"${stringFormatter.FormatDecimalPrice(tradable.TotalValue)}";    
-                                @priceLabel    
+            @{
+                foreach (OwnershipTradable tradable in Model.Tradables)    
+                {
+                    <tr> 
+                        <td> 
+                            @tradable.Symbol    
+                        </td>
+                        <td data-amount-label-number="1" data-amount-label-symbol="@tradable.Symbol" data-amount-label-value="@tradable.Amount">
+                            @tradable.Amount
+                        </td>
+                        <td data-price-symbol="@tradable.Symbol" data-amount-label-number="1">
+                            @{    
+                                if (tradable.TradablePriceInfos != null)    
+                                {    
+                                    string priceLabel = $"${stringFormatter.FormatDecimalPrice(tradable.TotalValue)}";    
+                                    @priceLabel    
+                                }    
                             }    
-                        }    
-                    </td>    
-                    <td>    
-                        <a href="/Tradables/Buy?Symbol=@tradable.Symbol">Buy</a>    
-                        |    
-                        <a href="/Tradables/Sell?Symbol=@tradable.Symbol">Sell</a>    
-                    </td>    
-                </tr>    
+                        </td>    
+                        <td>    
+                            <a href="/Tradables/Buy?Symbol=@tradable.Symbol">Buy</a>    
+                            |    
+                            <a href="/Tradables/Sell?Symbol=@tradable.Symbol">Sell</a>    
+                        </td>    
+                    </tr>    
                 }  
             }
         </tbody>
