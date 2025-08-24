@@ -31,5 +31,18 @@ namespace RealTimeStockSimulator.Services
 
             return ownership;
         }
+
+        public OwnershipTradable? GetOwnershipTradableByUser(User user, string symbol)
+        {
+            OwnershipTradable? tradable = _ownershipsRepository.GetOwnershipTradableByUser(user, symbol);
+            Dictionary<string, TradablePriceInfos>? tradablePriceInfosDictionary = _memoryCache.Get<Dictionary<string, TradablePriceInfos>?>("TradablePriceInfosDictionary");
+
+            if (tradable != null &&  tradablePriceInfosDictionary != null)
+            {
+                tradable.TradablePriceInfos = tradablePriceInfosDictionary[tradable.Symbol];
+            }
+
+            return tradable;
+        }
     }
 }

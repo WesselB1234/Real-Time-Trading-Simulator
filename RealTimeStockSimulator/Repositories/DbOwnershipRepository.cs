@@ -34,5 +34,30 @@ namespace RealTimeStockSimulator.Repositories
 
             return ownership;
         }
+
+        public OwnershipTradable? GetOwnershipTradableByUser(User user, string symbol)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = "SELECT symbol, amount " +
+                    "FROM Ownership " +
+                    "WHERE user_id = @UserId AND symbol = @Symbol;";
+
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@UserId", user.UserId);
+                command.Parameters.AddWithValue("@Symbol", symbol);
+
+                command.Connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    return _dataMapper.MapOwnershipTradable(reader);
+                }
+            }
+
+            return null;
+        }
     }
 }

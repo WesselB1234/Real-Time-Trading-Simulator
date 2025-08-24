@@ -5,5 +5,6 @@ namespace RealTimeStockSimulator.Services.Interfaces
     public interface IOwnershipsService
     {
         Ownership GetOwnershipByUser(User user);
+        OwnershipTradable? GetOwnershipTradableByUser(User user, string symbol);
     }
 }

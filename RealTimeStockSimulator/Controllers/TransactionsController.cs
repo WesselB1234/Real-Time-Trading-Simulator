@@ -7,6 +7,7 @@ namespace RealTimeStockSimulator.Controllers
     public class TransactionsController : BaseController
     {
         private IMarketTransactionsService _marketTransactionsService;
+
         public TransactionsController(IMarketTransactionsService marketTransactionsService)
         {
             _marketTransactionsService = marketTransactionsService;

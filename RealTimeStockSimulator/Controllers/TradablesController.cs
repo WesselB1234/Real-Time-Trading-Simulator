@@ -9,10 +9,12 @@ namespace RealTimeStockSimulator.Controllers
     public class TradablesController : BaseController
     {
         private ITradablesService _tradablesService { get; set; }
+        private IOwnershipsService _ownershipsService { get; set; }
 
-        public TradablesController(ITradablesService tradablesService)
+        public TradablesController(ITradablesService tradablesService, IOwnershipsService ownershipsService)
         {
             _tradablesService = tradablesService;
+            _ownershipsService = ownershipsService;
         }
 
         public IActionResult Index()
@@ -46,9 +48,28 @@ namespace RealTimeStockSimulator.Controllers
             return RedirectToAction("Buy", confirmViewModel);
         }
 
-        public IActionResult Sell()
+        public IActionResult Sell(ConfirmBuySellViewModel confirmViewModel)
         {
-            return View();
+            if (confirmViewModel.Symbol == null)
+            {
+                return NotFound();
+            }
+
+            OwnershipTradable? tradable = _ownershipsService.GetOwnershipTradableByUser(LoggedInUser, confirmViewModel.Symbol);
+
+            if (tradable == null)
+            {
+                return NotFound();
+            }
+
+            SellViewModel viewModel = new SellViewModel(tradable, confirmViewModel.Amount);
+
+            return View(viewModel);
+        }
+
+        public IActionResult ConfirmSell(ConfirmBuySellViewModel confirmViewModel)
+        {
+            return RedirectToAction("Sell", confirmViewModel);
         }
     }
 }

@@ -5,7 +5,7 @@
         public OwnershipTradable OwnershipTradable { get; set; }
         public int? Amount { get; set; }
 
-        public SellViewModel(OwnershipTradable ownershipTradable, int amount)
+        public SellViewModel(OwnershipTradable ownershipTradable, int? amount)
         {
             OwnershipTradable = ownershipTradable;
             Amount = amount;
