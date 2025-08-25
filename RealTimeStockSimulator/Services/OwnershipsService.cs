@@ -89,7 +89,24 @@ namespace RealTimeStockSimulator.Services
 
         public decimal SellTradable(User user, OwnershipTradable tradable, int amount)
         {
-            throw new NotImplementedException();
+            OwnershipTradable? ownershipTradable = _ownershipsRepository.GetOwnershipTradableByUser(user, tradable.Symbol);
+
+            if (amount > tradable.Amount)
+            {
+                throw new ArgumentException("You do not own this amount.");
+            }
+
+            if (ownershipTradable != null && ownershipTradable.Amount - amount >= 1)
+            {
+                ownershipTradable.Amount -= amount;
+                UpdateOwnershipTradable(user, ownershipTradable);
+            }
+            else
+            {
+                RemoveOwnershipTradableFromUser(user, tradable);
+            }
+
+            return user.Money + (tradable.TradablePriceInfos.Price * amount);
         }
     }
 }

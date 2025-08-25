@@ -112,7 +112,7 @@ namespace RealTimeStockSimulator.Controllers
             {
                 TempData["ErrorMessage"] = ex.Message;
 
-                return RedirectToAction("Sell", confirmViewModel);
+                return RedirectToAction("Buy", confirmViewModel);
             }
         }
 
@@ -142,6 +142,18 @@ namespace RealTimeStockSimulator.Controllers
         {
             try
             {
+                if (confirmViewModel.Amount == null || confirmViewModel.Amount < 1)
+                {
+                    confirmViewModel.Amount = 1;
+                }
+
+                OwnershipTradable tradable = GetOwnershipTradableFromBuySellViewModel(confirmViewModel);
+                decimal moneyAfterSelling = _ownershipsService.SellTradable(LoggedInUser, tradable, (int)confirmViewModel.Amount);
+
+                LoggedInUser.Money = moneyAfterSelling;
+                HttpContext.Session.SetObject("LoggedInUser", LoggedInUser);
+                _usersService.UpdateUser(LoggedInUser);
+
                 TempData["ConfirmationMessage"] = "Selling successful.";
 
                 return RedirectToAction("Index", "Portfolio");
