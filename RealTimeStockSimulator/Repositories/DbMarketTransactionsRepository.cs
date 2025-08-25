@@ -9,6 +9,25 @@ namespace RealTimeStockSimulator.Repositories
     {
         public DbMarketTransactionsRepository(IConfiguration configuration, IDataMapper dataMapper) : base(configuration, dataMapper) { }
 
+        public void AddTransaction(User user, MarketTransactionTradable transaction)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = "INSERT INTO Transactions(user_id, symbol, price, status, amount) " +
+                    $"VALUES (@UserId, @Symbol, @Price, @Status, @Amount);";
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@UserId", user.UserId);
+                command.Parameters.AddWithValue("@Symbol", transaction.Tradable.Symbol);
+                command.Parameters.AddWithValue("@Price", transaction.Price);
+                command.Parameters.AddWithValue("@Status", transaction.Status);
+                command.Parameters.AddWithValue("@Amount", transaction.Amount);
+
+                command.Connection.Open();
+                command.ExecuteScalar();
+            }
+        }
+
         public MarketTransactions GetTransactionsByUser(User user)
         {
             MarketTransactions transactions = new MarketTransactions(user, new List<MarketTransactionTradable>());

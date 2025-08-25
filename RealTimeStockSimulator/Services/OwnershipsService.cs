@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using RealTimeStockSimulator.Models;
+using RealTimeStockSimulator.Models.Enums;
 using RealTimeStockSimulator.Models.Interfaces;
 using RealTimeStockSimulator.Repositories.Interfaces;
 using RealTimeStockSimulator.Services.Interfaces;
@@ -9,12 +10,14 @@ namespace RealTimeStockSimulator.Services
     public class OwnershipsService : IOwnershipsService
     {
         private IOwnershipsRepository _ownershipsRepository;
+        private IMarketTransactionsService _marketTransactionsService;
         private IMemoryCache _memoryCache;
         private IDataMapper _mapper;
 
-        public OwnershipsService(IOwnershipsRepository ownershipsRepository, IMemoryCache memoryCache, IDataMapper mapper)
+        public OwnershipsService(IOwnershipsRepository ownershipsRepository, IMarketTransactionsService marketTransactionsService,IMemoryCache memoryCache, IDataMapper mapper)
         {
             _ownershipsRepository = ownershipsRepository;
+            _marketTransactionsService = marketTransactionsService;
             _memoryCache = memoryCache;
             _mapper = mapper;
         }
@@ -63,6 +66,13 @@ namespace RealTimeStockSimulator.Services
             _ownershipsRepository.RemoveOwnershipTradableFromUser(user, tradable);
         }
 
+        private void LogOrderTransaction(User user, Tradable tradable, MarketTransactionStatus status, int amount)
+        {
+            MarketTransactionTradable marketTransactionTradable = new MarketTransactionTradable(tradable, tradable.TradablePriceInfos.Price, status, amount);
+
+            _marketTransactionsService.AddTransaction(user, marketTransactionTradable);
+        }
+
         public decimal BuyTradable(User user, Tradable tradable, int amount)
         {
             decimal moneyAfterPurchase = user.Money - (tradable.TradablePriceInfos.Price * amount);
@@ -83,6 +93,8 @@ namespace RealTimeStockSimulator.Services
             {
                 AddOwnershipTradableToUser(user, _mapper.MapOwnershipTradableByTradable(tradable, amount));
             }
+
+            LogOrderTransaction(user, tradable, MarketTransactionStatus.Bought, amount);
 
             return moneyAfterPurchase;
         }
@@ -105,6 +117,8 @@ namespace RealTimeStockSimulator.Services
             {
                 RemoveOwnershipTradableFromUser(user, tradable);
             }
+
+            LogOrderTransaction(user, tradable, MarketTransactionStatus.Sold, amount);
 
             return user.Money + (tradable.TradablePriceInfos.Price * amount);
         }
