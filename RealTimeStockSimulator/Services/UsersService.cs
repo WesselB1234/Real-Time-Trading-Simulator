@@ -45,5 +45,10 @@ namespace RealTimeStockSimulator.Services
         {
             return _usersRepository.GetUserByName(userName);
         }
+
+        public void UpdateUser(User user)
+        {
+            _usersRepository.UpdateUser(user);
+        }
     }
 }

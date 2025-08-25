@@ -7,5 +7,6 @@ namespace RealTimeStockSimulator.Services.Interfaces
         User? GetUserByName(string userName);
         int AddUser(User user);
         User? GetUserByLoginCredentials(string userName, string password);
+        void UpdateUser(User user);
     }
 }

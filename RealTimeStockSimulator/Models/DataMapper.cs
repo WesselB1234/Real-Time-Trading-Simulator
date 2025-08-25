@@ -42,5 +42,10 @@ namespace RealTimeStockSimulator.Models
 
             return new MarketTransactionTradable(tradable, price, status, amount);
         }
+
+        public OwnershipTradable MapOwnershipTradableByTradable(Tradable tradable, int amount)
+        {
+            return new OwnershipTradable(tradable.Symbol, amount);
+        }
     }
 }

@@ -83,5 +83,25 @@ namespace RealTimeStockSimulator.Repositories
 
             return null;
         }
+
+        public void UpdateUser(User user)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = "UPDATE Users " +
+                    "SET username = @UserName, email = @Email, password = @Password, money = @Money " +
+                    "WHERE user_id = @UserId";
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@UserId", user.UserId);
+                command.Parameters.AddWithValue("@UserName", user.UserName);
+                command.Parameters.AddWithValue("@Email", user.Email);
+                command.Parameters.AddWithValue("@Password", user.Password);
+                command.Parameters.AddWithValue("@Money", user.Money);
+
+                command.Connection.Open();
+                command.ExecuteScalar();
+            }
+        }
     }
 }

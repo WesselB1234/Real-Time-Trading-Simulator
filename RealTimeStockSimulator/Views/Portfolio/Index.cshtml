@@ -15,6 +15,10 @@
     <h2>
         Total value: <span class="TotalOwnershipValue">$@stringFormatter.FormatDecimalPrice(@Model.TotalOwnershipValue)</span>
     </h2>
+
+    <partial name="_ErrorMessage" />
+    <partial name="_ConfirmMessage" />
+
     <table class="table">
         <thead>
             <tr>

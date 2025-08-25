@@ -59,5 +59,56 @@ namespace RealTimeStockSimulator.Repositories
 
             return null;
         }
+
+        public void AddOwnershipTradableToUser(User user, OwnershipTradable tradable)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = "INSERT INTO Ownership(user_id, symbol, amount) " +
+                    $"VALUES (@UserId, @Symbol, @Amount);";
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@UserId", user.UserId);
+                command.Parameters.AddWithValue("@Symbol", tradable.Symbol);
+                command.Parameters.AddWithValue("@Amount", tradable.Amount);
+
+                command.Connection.Open();
+                command.ExecuteScalar();
+            }
+        }
+
+        public void UpdateOwnershipTradable(User user, OwnershipTradable tradable)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = "UPDATE Ownership " +
+                    "SET amount = @Amount " +
+                    "WHERE user_id = @UserId AND symbol = @Symbol;";
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@UserId", user.UserId);
+                command.Parameters.AddWithValue("@Symbol", tradable.Symbol);
+                command.Parameters.AddWithValue("@Amount", tradable.Amount);
+
+                command.Connection.Open();
+                command.ExecuteScalar();
+            }
+        }
+
+        public void RemoveOwnershipTradableFromUser(User user, OwnershipTradable tradable)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = "DELETE FROM Ownership " +
+                    "WHERE user_id = @UserId AND symbol = @Symbol;";
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@UserId", user.UserId);
+                command.Parameters.AddWithValue("@Symbol", tradable.Symbol);
+
+                command.Connection.Open();
+                command.ExecuteScalar();
+            }
+        }
     }
 }
