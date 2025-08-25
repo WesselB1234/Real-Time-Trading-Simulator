@@ -35,12 +35,14 @@ namespace RealTimeStockSimulator.Models
 
         public MarketTransactionTradable MapMarketTransactionTradable(SqlDataReader reader)
         {
+            int transactionId = (int)reader["transaction_id"];
             Tradable tradable = MapTradable(reader);
             decimal price = (decimal)reader["price"];
             MarketTransactionStatus status = (MarketTransactionStatus)Enum.Parse(typeof(MarketTransactionStatus), (string)reader["status"]);
             int amount = (int)reader["amount"];
+            DateTime date = (DateTime)reader["date"];
 
-            return new MarketTransactionTradable(tradable, price, status, amount);
+            return new MarketTransactionTradable(transactionId, tradable, price, status, amount, date);
         }
 
         public OwnershipTradable MapOwnershipTradableByTradable(Tradable tradable, int amount)

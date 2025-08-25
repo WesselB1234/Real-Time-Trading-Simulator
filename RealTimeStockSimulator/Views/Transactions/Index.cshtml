@@ -15,16 +15,25 @@
         <thead>
             <tr>
                 <th>
+                    Transaction id
+                </th>
+                <th>
                     Symbol
                 </th>
                 <th>
-                    Price
+                    Value of symbol
+                </th>
+                <th>
+                    Total value
+                </th>
+                <th>
+                    Amount
                 </th>
                 <th>
                     Status
                 </th>
                 <th>
-                    Amount
+                    Date
                 </th>
             </tr>
         </thead>
@@ -34,16 +43,25 @@
                 {
                     <tr>
                         <td>
+                            @transaction.TransactionId
+                        </td>
+                        <td>
                             @transaction.Tradable.Symbol
                         </td>
                         <td>
                             $@stringFormatter.FormatDecimalPrice(transaction.Price)
                         </td>
                         <td>
-                            @transaction.Status
+                            $@stringFormatter.FormatDecimalPrice(transaction.Price * transaction.Amount)
                         </td>
                         <td>
                             @transaction.Amount
+                        </td>
+                        <td>
+                            @transaction.Status
+                        </td>
+                        <td>
+                            @transaction.Date
                         </td>
                     </tr>
                 }

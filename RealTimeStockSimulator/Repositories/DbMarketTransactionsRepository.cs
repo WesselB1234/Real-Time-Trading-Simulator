@@ -9,22 +9,31 @@ namespace RealTimeStockSimulator.Repositories
     {
         public DbMarketTransactionsRepository(IConfiguration configuration, IDataMapper dataMapper) : base(configuration, dataMapper) { }
 
-        public void AddTransaction(User user, MarketTransactionTradable transaction)
+        public int AddTransaction(User user, MarketTransactionTradable transaction)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "INSERT INTO Transactions(user_id, symbol, price, status, amount) " +
-                    $"VALUES (@UserId, @Symbol, @Price, @Status, @Amount);";
+                string query = "INSERT INTO Transactions(user_id, symbol, price, status, amount, date) " +
+                    "VALUES (@UserId, @Symbol, @Price, @Status, @Amount, @Date)" +
+                    "SELECT SCOPE_IDENTITY();";
                 SqlCommand command = new SqlCommand(query, connection);
 
                 command.Parameters.AddWithValue("@UserId", user.UserId);
                 command.Parameters.AddWithValue("@Symbol", transaction.Tradable.Symbol);
                 command.Parameters.AddWithValue("@Price", transaction.Price);
-                command.Parameters.AddWithValue("@Status", transaction.Status);
+                command.Parameters.AddWithValue("@Status", transaction.Status.ToString());
                 command.Parameters.AddWithValue("@Amount", transaction.Amount);
+                command.Parameters.AddWithValue("@Date", transaction.Date);
 
                 command.Connection.Open();
-                command.ExecuteScalar();
+                int? transactionId = Convert.ToInt32(command.ExecuteScalar());
+
+                if (transactionId == null)
+                {
+                    throw new Exception("Insert transaction did not return a valid transaction_id.");
+                }
+
+                return (int)transactionId;
             }
         }
 
@@ -34,9 +43,10 @@ namespace RealTimeStockSimulator.Repositories
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "SELECT symbol, price, status, amount " +
+                string query = "SELECT transaction_id, symbol, price, status, amount, date " +
                    "FROM Transactions " +
-                   "WHERE user_id = @UserId;";
+                   "WHERE user_id = @UserId " +
+                   "ORDER BY transaction_id DESC;";
 
                 SqlCommand command = new SqlCommand(query, connection);
 

@@ -49,7 +49,7 @@ namespace RealTimeStockSimulator.Controllers
                     UserName = registerViewModel.UserName,
                     Email = registerViewModel.Email,
                     Password = registerViewModel.Password,
-                    Money = 0
+                    Money = 100000
                 };
 
                 _usersService.AddUser(user);

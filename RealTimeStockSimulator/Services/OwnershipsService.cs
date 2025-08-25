@@ -68,7 +68,7 @@ namespace RealTimeStockSimulator.Services
 
         private void LogOrderTransaction(User user, Tradable tradable, MarketTransactionStatus status, int amount)
         {
-            MarketTransactionTradable marketTransactionTradable = new MarketTransactionTradable(tradable, tradable.TradablePriceInfos.Price, status, amount);
+            MarketTransactionTradable marketTransactionTradable = new MarketTransactionTradable(tradable, tradable.TradablePriceInfos.Price, status, amount, DateTime.Now);
 
             _marketTransactionsService.AddTransaction(user, marketTransactionTradable);
         }
