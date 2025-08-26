@@ -3,7 +3,7 @@
     @inject RealTimeStockSimulator.Models.Interfaces.IStringFormatter stringFormatter
     @using System.Text.Json
 
-    ViewData["title"] = "Portfolio";
+    ViewData["title"] = $"{Model.User.UserName}'s Portfolio";
 }
 
 <partial name="_Navbar" />
