@@ -50,5 +50,10 @@ namespace RealTimeStockSimulator.Services
         {
             _usersRepository.UpdateUser(user);
         }
+
+        public List<User> GetAllUsers()
+        {
+            return _usersRepository.GetAllUsers();
+        }
     }
 }

@@ -24,8 +24,8 @@ namespace RealTimeStockSimulator.Repositories
                 command.Parameters.AddWithValue("@Status", transaction.Status.ToString());
                 command.Parameters.AddWithValue("@Amount", transaction.Amount);
                 command.Parameters.AddWithValue("@Date", transaction.Date);
-
                 command.Connection.Open();
+
                 int? transactionId = Convert.ToInt32(command.ExecuteScalar());
 
                 if (transactionId == null)
@@ -47,12 +47,11 @@ namespace RealTimeStockSimulator.Repositories
                    "FROM Transactions " +
                    "WHERE user_id = @UserId " +
                    "ORDER BY transaction_id DESC;";
-
                 SqlCommand command = new SqlCommand(query, connection);
 
                 command.Parameters.AddWithValue("@UserId", user.UserId);
-
                 command.Connection.Open();
+
                 SqlDataReader reader = command.ExecuteReader();
 
                 while (reader.Read())

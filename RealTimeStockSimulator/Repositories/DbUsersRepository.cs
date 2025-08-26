@@ -42,15 +42,14 @@ namespace RealTimeStockSimulator.Repositories
                 string query = "SELECT user_id, username, email, password, money " +
                     "FROM Users " +
                     "WHERE username = @UserName";
-
                 SqlCommand command = new SqlCommand(query, connection);
 
                 command.Parameters.AddWithValue("@UserName", userName);
-
                 command.Connection.Open();
+
                 SqlDataReader reader = command.ExecuteReader();
 
-                while (reader.Read())
+                if (reader.Read())
                 {
                     return _dataMapper.MapUser(reader);
                 }
@@ -66,16 +65,15 @@ namespace RealTimeStockSimulator.Repositories
                 string query = "SELECT user_id, username, email, password, money " +
                     "FROM Users " +
                     "WHERE username = @UserName AND password = @Password";
-
                 SqlCommand command = new SqlCommand(query, connection);
 
                 command.Parameters.AddWithValue("@UserName", userName);
                 command.Parameters.AddWithValue("@Password", password);
-
                 command.Connection.Open();
+
                 SqlDataReader reader = command.ExecuteReader();
 
-                while (reader.Read())
+                if (reader.Read())
                 {
                     return _dataMapper.MapUser(reader);
                 }
@@ -98,10 +96,31 @@ namespace RealTimeStockSimulator.Repositories
                 command.Parameters.AddWithValue("@Email", user.Email);
                 command.Parameters.AddWithValue("@Password", user.Password);
                 command.Parameters.AddWithValue("@Money", user.Money);
-
                 command.Connection.Open();
+
                 command.ExecuteScalar();
             }
+        }
+
+        public List<User> GetAllUsers()
+        {
+            List<User> users = new List<User>();
+
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = "SELECT user_id, username, email, password, money FROM Users;";
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    users.Add(_dataMapper.MapUser(reader));
+                }
+            }
+
+            return users;
         }
     }
 }

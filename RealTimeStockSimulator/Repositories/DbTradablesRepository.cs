@@ -20,13 +20,12 @@ namespace RealTimeStockSimulator.Repositories
 
                 command.Connection.Open();
 
-                using (SqlDataReader reader = command.ExecuteReader())
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
                 {
-                    while (reader.Read())
-                    {
-                        Tradable tradable = _dataMapper.MapTradable(reader);
-                        tradables.Add(tradable);
-                    }
+                    Tradable tradable = _dataMapper.MapTradable(reader);
+                    tradables.Add(tradable);
                 }
             }
 
@@ -41,15 +40,13 @@ namespace RealTimeStockSimulator.Repositories
                 SqlCommand command = new SqlCommand(query, connection);
 
                 command.Parameters.AddWithValue("@Symbol", symbol);
-
                 command.Connection.Open();
 
-                using (SqlDataReader reader = command.ExecuteReader())
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.Read())
                 {
-                    while (reader.Read())
-                    {
-                        return _dataMapper.MapTradable(reader);
-                    }
+                    return _dataMapper.MapTradable(reader);
                 }
             }
 

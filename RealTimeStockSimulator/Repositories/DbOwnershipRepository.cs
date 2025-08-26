@@ -22,8 +22,8 @@ namespace RealTimeStockSimulator.Repositories
                 SqlCommand command = new SqlCommand(query, connection);
 
                 command.Parameters.AddWithValue("@UserId", ownership.User.UserId);
-
                 command.Connection.Open();
+
                 SqlDataReader reader = command.ExecuteReader();
 
                 while (reader.Read())
@@ -42,13 +42,12 @@ namespace RealTimeStockSimulator.Repositories
                 string query = "SELECT symbol, amount " +
                     "FROM Ownership " +
                     "WHERE user_id = @UserId AND symbol = @Symbol;";
-
                 SqlCommand command = new SqlCommand(query, connection);
 
                 command.Parameters.AddWithValue("@UserId", user.UserId);
                 command.Parameters.AddWithValue("@Symbol", symbol);
-
                 command.Connection.Open();
+
                 SqlDataReader reader = command.ExecuteReader();
 
                 if (reader.Read())
@@ -71,8 +70,8 @@ namespace RealTimeStockSimulator.Repositories
                 command.Parameters.AddWithValue("@UserId", user.UserId);
                 command.Parameters.AddWithValue("@Symbol", tradable.Symbol);
                 command.Parameters.AddWithValue("@Amount", tradable.Amount);
-
                 command.Connection.Open();
+
                 command.ExecuteScalar();
             }
         }
@@ -89,8 +88,8 @@ namespace RealTimeStockSimulator.Repositories
                 command.Parameters.AddWithValue("@UserId", user.UserId);
                 command.Parameters.AddWithValue("@Symbol", tradable.Symbol);
                 command.Parameters.AddWithValue("@Amount", tradable.Amount);
-
                 command.Connection.Open();
+
                 command.ExecuteScalar();
             }
         }
@@ -105,8 +104,8 @@ namespace RealTimeStockSimulator.Repositories
 
                 command.Parameters.AddWithValue("@UserId", user.UserId);
                 command.Parameters.AddWithValue("@Symbol", tradable.Symbol);
-
                 command.Connection.Open();
+
                 command.ExecuteScalar();
             }
         }
