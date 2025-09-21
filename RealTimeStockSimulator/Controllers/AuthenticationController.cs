@@ -9,6 +9,7 @@ namespace RealTimeStockSimulator.Controllers
     public class AuthenticationController : BaseController
     {
         private IUsersService _usersService;
+
         public AuthenticationController(IUsersService usersService)
         {
             _usersService = usersService;

@@ -9,7 +9,12 @@ namespace RealTimeStockSimulator.Repositories
 
         public TradablePriceInfos? GetPriceInfosBySymbol(string symbol)
         {
-            return _tradablesPriceInfosDictionary[symbol];
+            if (_tradablesPriceInfosDictionary.ContainsKey(symbol))
+            {
+                return _tradablesPriceInfosDictionary[symbol];
+            }
+
+            return null;
         }
 
         public Dictionary<string, TradablePriceInfos> GetPriceInfosDictionary()

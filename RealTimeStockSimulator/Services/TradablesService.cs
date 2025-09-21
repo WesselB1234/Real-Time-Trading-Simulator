@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-using RealTimeStockSimulator.Models;
+﻿using RealTimeStockSimulator.Models;
 using RealTimeStockSimulator.Repositories.Interfaces;
 using RealTimeStockSimulator.Services.Interfaces;
 
@@ -8,27 +7,23 @@ namespace RealTimeStockSimulator.Services
     public class TradablesService : ITradablesService
     {
         private string? _marketApiKey;
-        IMemoryCache _memoryCache;
+        private ITradablePriceInfosService _priceInfosService;
         ITradablesRepository _tradablesRepository;
 
-        public TradablesService(IConfiguration configuration, IMemoryCache memoryCache, ITradablesRepository tradablesRepository)
+        public TradablesService(IConfiguration configuration, ITradablePriceInfosService priceInfosService, ITradablesRepository tradablesRepository)
         {
             _marketApiKey = configuration.GetValue<string>("ApiKeyStrings:MarketApiKey");
-            _memoryCache = memoryCache;
+            _priceInfosService = priceInfosService;
             _tradablesRepository = tradablesRepository;
         }
 
         public List<Tradable> GetAllTradables()
         {
             List<Tradable> tradables = _tradablesRepository.GetAllTradables();
-            Dictionary<string, TradablePriceInfos>? tradablePriceInfosDictionary = _memoryCache.Get<Dictionary<string, TradablePriceInfos>?>("TradablePriceInfosDictionary");
 
-            if (tradablePriceInfosDictionary != null)
+            foreach(Tradable tradable in tradables)
             {
-                foreach(Tradable tradable in tradables)
-                {
-                    tradable.TradablePriceInfos = tradablePriceInfosDictionary[tradable.Symbol];
-                }
+                tradable.TradablePriceInfos = _priceInfosService.GetPriceInfosBySymbol(tradable.Symbol);
             }
 
             return tradables;
@@ -64,13 +59,12 @@ namespace RealTimeStockSimulator.Services
         public Tradable? GetTradableBySymbol(string symbol)
         {
             Tradable? tradable = _tradablesRepository.GetTradableBySymbol(symbol);
-            Dictionary<string, TradablePriceInfos>? tradablePriceInfosDictionary = _memoryCache.Get<Dictionary<string, TradablePriceInfos>?>("TradablePriceInfosDictionary");
 
-            if (tradablePriceInfosDictionary != null && tradable != null)
+            if (tradable != null)
             {
-                tradable.TradablePriceInfos = tradablePriceInfosDictionary[tradable.Symbol];
+                tradable.TradablePriceInfos = _priceInfosService.GetPriceInfosBySymbol(tradable.Symbol);
             }
-
+            
             return tradable;
         }
     }

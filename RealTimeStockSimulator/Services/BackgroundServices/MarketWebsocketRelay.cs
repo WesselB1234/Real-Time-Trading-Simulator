@@ -4,6 +4,7 @@ using Microsoft.Extensions.Caching.Memory;
 using RealTimeStockSimulator.Hubs;
 using RealTimeStockSimulator.Models;
 using RealTimeStockSimulator.Models.Interfaces;
+using RealTimeStockSimulator.Repositories.Interfaces;
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
@@ -19,19 +20,18 @@ namespace RealTimeStockSimulator.Services.BackgroundServices
 
         private string? _marketApiKey;
         private IHubContext<MarketHub> _hubContext;
-        private IMemoryCache _memoryCache;
-        private Dictionary<string, TradablePriceInfos> _tradablePriceInfosDictionary;
+        private ITradablePriceInfosService _priceInfosService;
 
-        public MarketWebsocketRelay(IConfiguration configuration, IHubContext<MarketHub> hubContext, IMemoryCache memoryCache)
+        public MarketWebsocketRelay(IConfiguration configuration, IHubContext<MarketHub> hubContext, ITradablePriceInfosService priceInfosService)
         {
             _marketApiKey = configuration.GetValue<string>("ApiKeyStrings:MarketApiKey");
             _hubContext = hubContext;
-            _memoryCache = memoryCache;
+            _priceInfosService = priceInfosService;
         }
 
         private async Task SubscribeToTradablesInCache(ClientWebSocket client)
         {
-            foreach (KeyValuePair<string, TradablePriceInfos> entry in _tradablePriceInfosDictionary)
+            foreach (KeyValuePair<string, TradablePriceInfos> entry in _priceInfosService.GetPriceInfosDictionary())
             {
                 var subscribeRequest = new MarketSubscriptionRequest("subscribe", entry.Key);
                 string requestJson = JsonSerializer.Serialize(subscribeRequest, _jsonSerializerOptions);
@@ -43,26 +43,14 @@ namespace RealTimeStockSimulator.Services.BackgroundServices
         private async Task HandleMarketWebSocketPayload(MarketWebsocketPayload marketPayload)
         {
             MarketWebsocketTradable responseTradable = marketPayload.Data[marketPayload.Data.Count - 1];
-            TradablePriceInfos tradablePriceInfos = _tradablePriceInfosDictionary[responseTradable.Symbol];
+            TradablePriceInfos? tradablePriceInfos = _priceInfosService.GetPriceInfosBySymbol(responseTradable.Symbol);
 
-            if (responseTradable.Price != null && tradablePriceInfos.Price != responseTradable.Price)
+            if (responseTradable.Price != null && tradablePriceInfos != null && tradablePriceInfos.Price != responseTradable.Price)
             {
                 tradablePriceInfos.Price = (decimal)responseTradable.Price;
                 TradableUpdatePayload tradableUpdatePayload = new TradableUpdatePayload(responseTradable.Symbol, tradablePriceInfos);
 
                 await _hubContext.Clients.All.SendAsync("ReceiveMarketData", JsonSerializer.Serialize(tradableUpdatePayload), CancellationToken.None);
-            }
-        }
-
-        private Dictionary<string, TradablePriceInfos> GetTradablePriceInfosDictionary()
-        {
-            if (_memoryCache.Get("TradablePriceInfosDictionary") is Dictionary<string, TradablePriceInfos> tradablePriceInfosDictionary)
-            {
-                return tradablePriceInfosDictionary;
-            }
-            else
-            {
-                throw new Exception("TradablesPriceInfosDictionary does not exist in cache.");
             }
         }
 
@@ -72,8 +60,6 @@ namespace RealTimeStockSimulator.Services.BackgroundServices
 
             try
             {
-                _tradablePriceInfosDictionary = GetTradablePriceInfosDictionary();
-
                 Uri uri = new Uri($"wss://ws.finnhub.io?token={_marketApiKey}");
 
                 await client.ConnectAsync(uri, CancellationToken.None);

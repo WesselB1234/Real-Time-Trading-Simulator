@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Caching.Memory;
-using RealTimeStockSimulator.Models;
+﻿using RealTimeStockSimulator.Models;
 using RealTimeStockSimulator.Models.Enums;
 using RealTimeStockSimulator.Models.Interfaces;
 using RealTimeStockSimulator.Repositories.Interfaces;
@@ -11,28 +10,24 @@ namespace RealTimeStockSimulator.Services
     {
         private IOwnershipsRepository _ownershipsRepository;
         private IMarketTransactionsService _marketTransactionsService;
-        private IMemoryCache _memoryCache;
+        private ITradablePriceInfosService _priceInfosService;
         private IDataMapper _mapper;
 
-        public OwnershipsService(IOwnershipsRepository ownershipsRepository, IMarketTransactionsService marketTransactionsService,IMemoryCache memoryCache, IDataMapper mapper)
+        public OwnershipsService(IOwnershipsRepository ownershipsRepository, IMarketTransactionsService marketTransactionsService, ITradablePriceInfosService priceInfosService, IDataMapper mapper)
         {
             _ownershipsRepository = ownershipsRepository;
             _marketTransactionsService = marketTransactionsService;
-            _memoryCache = memoryCache;
+            _priceInfosService = priceInfosService;
             _mapper = mapper;
         }
 
         public Ownership GetOwnershipByUser(User user)
         {
             Ownership ownership = _ownershipsRepository.GetOwnershipByUser(user);
-            Dictionary<string, TradablePriceInfos>? tradablePriceInfosDictionary = _memoryCache.Get<Dictionary<string, TradablePriceInfos>?>("TradablePriceInfosDictionary");
-
-            if (tradablePriceInfosDictionary != null)
+          
+            foreach (OwnershipTradable tradable in ownership.Tradables)
             {
-                foreach (OwnershipTradable tradable in ownership.Tradables)
-                {
-                    tradable.TradablePriceInfos = tradablePriceInfosDictionary[tradable.Symbol];
-                }
+                tradable.TradablePriceInfos = _priceInfosService.GetPriceInfosBySymbol(tradable.Symbol);
             }
 
             return ownership;
@@ -41,11 +36,10 @@ namespace RealTimeStockSimulator.Services
         public OwnershipTradable? GetOwnershipTradableByUser(User user, string symbol)
         {
             OwnershipTradable? tradable = _ownershipsRepository.GetOwnershipTradableByUser(user, symbol);
-            Dictionary<string, TradablePriceInfos>? tradablePriceInfosDictionary = _memoryCache.Get<Dictionary<string, TradablePriceInfos>?>("TradablePriceInfosDictionary");
-
-            if (tradable != null &&  tradablePriceInfosDictionary != null)
+          
+            if (tradable != null)
             {
-                tradable.TradablePriceInfos = tradablePriceInfosDictionary[tradable.Symbol];
+                tradable.TradablePriceInfos = _priceInfosService.GetPriceInfosBySymbol(symbol);
             }
 
             return tradable;
