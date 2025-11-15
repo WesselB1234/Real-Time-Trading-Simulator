@@ -5,7 +5,7 @@ namespace RealTimeStockSimulator.Repositories.Interfaces
     public interface ITradablePriceInfosRepository
     {
         TradablePriceInfos? GetPriceInfosBySymbol(string symbol);
-        Dictionary<string, TradablePriceInfos> GetPriceInfosDictionary();
+        List<string> GetAllKeys();
         void SetPriceInfosBySymbol(string symbol, TradablePriceInfos priceInfos);
     }
 }

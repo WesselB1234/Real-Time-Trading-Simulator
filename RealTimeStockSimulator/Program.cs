@@ -26,6 +26,7 @@ namespace RealTimeStockSimulator
             builder.Services.AddSingleton<IOwnershipsRepository, DbOwnershipRepository>();
             builder.Services.AddSingleton<IMarketTransactionsRepository, DbMarketTransactionsRepository>();
             builder.Services.AddSingleton<ITradablePriceInfosRepository, CacheTradablePriceInfosRepository>();
+            //builder.Services.AddSingleton<ITradablePriceInfosRepository, RedisTradablePriceInfosRepository>();
 
             builder.Services.AddSingleton<ITradablesService, TradablesService>();
             builder.Services.AddSingleton<IUsersService, UsersService>();

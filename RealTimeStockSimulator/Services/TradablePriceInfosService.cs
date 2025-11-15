@@ -17,9 +17,9 @@ namespace RealTimeStockSimulator.Services
             return _tradablePriceInfosRepository.GetPriceInfosBySymbol(symbol);
         }
 
-        public Dictionary<string, TradablePriceInfos> GetPriceInfosDictionary()
+        public List<string> GetAllKeys()
         {
-            return _tradablePriceInfosRepository.GetPriceInfosDictionary();
+            return _tradablePriceInfosRepository.GetAllKeys();
         }
 
         public void SetPriceInfosBySymbol(string symbol, TradablePriceInfos priceInfos)

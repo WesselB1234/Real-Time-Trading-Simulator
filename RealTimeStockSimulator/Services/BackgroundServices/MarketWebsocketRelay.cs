@@ -31,9 +31,9 @@ namespace RealTimeStockSimulator.Services.BackgroundServices
 
         private async Task SubscribeToTradablesInCache(ClientWebSocket client)
         {
-            foreach (KeyValuePair<string, TradablePriceInfos> entry in _priceInfosService.GetPriceInfosDictionary())
+            foreach (string key in _priceInfosService.GetAllKeys())
             {
-                var subscribeRequest = new MarketSubscriptionRequest("subscribe", entry.Key);
+                MarketSubscriptionRequest subscribeRequest = new MarketSubscriptionRequest("subscribe", key);
                 string requestJson = JsonSerializer.Serialize(subscribeRequest, _jsonSerializerOptions);
 
                 await client.SendAsync(Encoding.UTF8.GetBytes(requestJson), WebSocketMessageType.Text, true, CancellationToken.None);
