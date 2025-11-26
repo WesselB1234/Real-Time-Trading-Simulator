@@ -7,11 +7,11 @@ namespace RealTimeStockSimulator.Controllers
 {
     public class BaseController : Controller
     {
-        protected User? LoggedInUser { get; private set; }
+        protected UserAccount? LoggedInUser { get; private set; }
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            LoggedInUser = HttpContext.Session.GetObject<User>("LoggedInUser");
+            LoggedInUser = HttpContext.Session.GetObject<UserAccount>("LoggedInUser");
 
             if (LoggedInUser == null && context.RouteData.Values["controller"]?.ToString() != "Authentication")
             {

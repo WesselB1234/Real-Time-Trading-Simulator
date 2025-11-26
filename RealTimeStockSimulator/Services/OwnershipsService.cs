@@ -21,7 +21,7 @@ namespace RealTimeStockSimulator.Services
             _mapper = mapper;
         }
 
-        public Ownership GetOwnershipByUser(User user)
+        public Ownership GetOwnershipByUser(UserAccount user)
         {
             Ownership ownership = _ownershipsRepository.GetOwnershipByUser(user);
           
@@ -33,7 +33,7 @@ namespace RealTimeStockSimulator.Services
             return ownership;
         }
 
-        public OwnershipTradable? GetOwnershipTradableByUser(User user, string symbol)
+        public OwnershipTradable? GetOwnershipTradableByUser(UserAccount user, string symbol)
         {
             OwnershipTradable? tradable = _ownershipsRepository.GetOwnershipTradableByUser(user, symbol);
           
@@ -45,29 +45,29 @@ namespace RealTimeStockSimulator.Services
             return tradable;
         }
 
-        public void AddOwnershipTradableToUser(User user, OwnershipTradable tradable)
+        public void AddOwnershipTradableToUser(UserAccount user, OwnershipTradable tradable)
         {
             _ownershipsRepository.AddOwnershipTradableToUser(user, tradable);
         }
 
-        public void UpdateOwnershipTradable(User user, OwnershipTradable tradable)
+        public void UpdateOwnershipTradable(UserAccount user, OwnershipTradable tradable)
         {
             _ownershipsRepository.UpdateOwnershipTradable(user, tradable);
         }
 
-        public void RemoveOwnershipTradableFromUser(User user, OwnershipTradable tradable)
+        public void RemoveOwnershipTradableFromUser(UserAccount user, OwnershipTradable tradable)
         {
             _ownershipsRepository.RemoveOwnershipTradableFromUser(user, tradable);
         }
 
-        private void LogOrderTransaction(User user, Tradable tradable, MarketTransactionStatus status, int amount)
+        private void LogOrderTransaction(UserAccount user, Tradable tradable, MarketTransactionStatus status, int amount)
         {
             MarketTransactionTradable marketTransactionTradable = new MarketTransactionTradable(tradable, tradable.TradablePriceInfos.Price, status, amount, DateTime.Now);
 
             _marketTransactionsService.AddTransaction(user, marketTransactionTradable);
         }
 
-        public decimal BuyTradable(User user, Tradable tradable, int amount)
+        public decimal BuyTradable(UserAccount user, Tradable tradable, int amount)
         {
             decimal moneyAfterPurchase = user.Money - (tradable.TradablePriceInfos.Price * amount);
 
@@ -93,7 +93,7 @@ namespace RealTimeStockSimulator.Services
             return moneyAfterPurchase;
         }
 
-        public decimal SellTradable(User user, OwnershipTradable tradable, int amount)
+        public decimal SellTradable(UserAccount user, OwnershipTradable tradable, int amount)
         {
             OwnershipTradable? ownershipTradable = _ownershipsRepository.GetOwnershipTradableByUser(user, tradable.Symbol);
 

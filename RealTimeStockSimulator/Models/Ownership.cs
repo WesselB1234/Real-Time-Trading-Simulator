@@ -2,7 +2,7 @@
 {
     public class Ownership
     {
-        public User User;
+        public UserAccount User;
         public List<OwnershipTradable> Tradables;
         public decimal TotalOwnershipValue
         {
@@ -19,7 +19,7 @@
             }
         }
 
-        public Ownership(User user, List<OwnershipTradable> tradables)
+        public Ownership(UserAccount user, List<OwnershipTradable> tradables)
         {
             User = user;
             Tradables = tradables;

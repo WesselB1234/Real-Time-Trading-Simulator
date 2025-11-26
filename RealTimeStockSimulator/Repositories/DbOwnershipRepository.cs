@@ -9,7 +9,7 @@ namespace RealTimeStockSimulator.Repositories
     {
         public DbOwnershipRepository(IConfiguration configuration, IDataMapper dataMapper) : base(configuration, dataMapper) { }
 
-        public Ownership GetOwnershipByUser(User user)
+        public Ownership GetOwnershipByUser(UserAccount user)
         {
             Ownership ownership = new Ownership(user, new List<OwnershipTradable>());
             
@@ -35,7 +35,7 @@ namespace RealTimeStockSimulator.Repositories
             return ownership;
         }
 
-        public OwnershipTradable? GetOwnershipTradableByUser(User user, string symbol)
+        public OwnershipTradable? GetOwnershipTradableByUser(UserAccount user, string symbol)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -59,7 +59,7 @@ namespace RealTimeStockSimulator.Repositories
             return null;
         }
 
-        public void AddOwnershipTradableToUser(User user, OwnershipTradable tradable)
+        public void AddOwnershipTradableToUser(UserAccount user, OwnershipTradable tradable)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -76,7 +76,7 @@ namespace RealTimeStockSimulator.Repositories
             }
         }
 
-        public void UpdateOwnershipTradable(User user, OwnershipTradable tradable)
+        public void UpdateOwnershipTradable(UserAccount user, OwnershipTradable tradable)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -94,7 +94,7 @@ namespace RealTimeStockSimulator.Repositories
             }
         }
 
-        public void RemoveOwnershipTradableFromUser(User user, OwnershipTradable tradable)
+        public void RemoveOwnershipTradableFromUser(UserAccount user, OwnershipTradable tradable)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {

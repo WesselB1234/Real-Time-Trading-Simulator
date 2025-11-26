@@ -22,7 +22,7 @@ namespace RealTimeStockSimulator.Controllers
 
         public IActionResult LoginIntoAccount(LoginViewModel loginViewModel)
         {
-            User? user = _usersService.GetUserByLoginCredentials(loginViewModel.UserName, loginViewModel.Password);
+            UserAccount? user = _usersService.GetUserByLoginCredentials(loginViewModel.UserName, loginViewModel.Password);
 
             if (user != null)
             {
@@ -45,7 +45,7 @@ namespace RealTimeStockSimulator.Controllers
         {
             try
             {
-                User user = new User
+                UserAccount user = new UserAccount
                 {
                     UserName = registerViewModel.UserName,
                     Email = registerViewModel.Email,

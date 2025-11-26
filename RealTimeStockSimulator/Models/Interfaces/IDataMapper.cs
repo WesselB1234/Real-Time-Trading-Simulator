@@ -4,7 +4,7 @@ namespace RealTimeStockSimulator.Models.Interfaces
 {
     public interface IDataMapper
     {
-        User MapUser(SqlDataReader reader);
+        UserAccount MapUser(SqlDataReader reader);
         Tradable MapTradable(SqlDataReader reader);
         OwnershipTradable MapOwnershipTradable(SqlDataReader reader);
         MarketTransactionTradable MapMarketTransactionTradable(SqlDataReader reader);

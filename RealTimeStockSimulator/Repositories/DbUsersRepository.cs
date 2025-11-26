@@ -9,7 +9,7 @@ namespace RealTimeStockSimulator.Repositories
     {
         public DbUsersRepository(IConfiguration configuration, IDataMapper dataMapper) : base(configuration, dataMapper) {}
 
-        public int AddUser(User user)
+        public int AddUser(UserAccount user)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -35,7 +35,7 @@ namespace RealTimeStockSimulator.Repositories
             }
         }
 
-        public User? GetUserByName(string userName)
+        public UserAccount? GetUserByName(string userName)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -58,7 +58,7 @@ namespace RealTimeStockSimulator.Repositories
             return null;
         }
 
-        public User? GetUserByLoginCredentials(string userName, string password)
+        public UserAccount? GetUserByLoginCredentials(string userName, string password)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -82,7 +82,7 @@ namespace RealTimeStockSimulator.Repositories
             return null;
         }
 
-        public void UpdateUser(User user)
+        public void UpdateUser(UserAccount user)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -102,9 +102,9 @@ namespace RealTimeStockSimulator.Repositories
             }
         }
 
-        public List<User> GetAllUsers()
+        public List<UserAccount> GetAllUsers()
         {
-            List<User> users = new List<User>();
+            List<UserAccount> users = new List<UserAccount>();
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -123,7 +123,7 @@ namespace RealTimeStockSimulator.Repositories
             return users;
         }
 
-        public User? GetUserByUserId(int userId)
+        public UserAccount? GetUserByUserId(int userId)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {

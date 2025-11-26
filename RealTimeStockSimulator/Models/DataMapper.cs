@@ -7,7 +7,7 @@ namespace RealTimeStockSimulator.Models
 {
     public class DataMapper : IDataMapper
     {
-        public User MapUser(SqlDataReader reader)
+        public UserAccount MapUser(SqlDataReader reader)
         {
             int userId = (int)reader["user_id"];
             string userName = (string)reader["username"];
@@ -15,7 +15,7 @@ namespace RealTimeStockSimulator.Models
             string password = (string)reader["password"];
             decimal money = (decimal)reader["money"];
 
-            return new User(userId, userName, email, password, money);
+            return new UserAccount(userId, userName, email, password, money);
         }
 
         public Tradable MapTradable(SqlDataReader reader)

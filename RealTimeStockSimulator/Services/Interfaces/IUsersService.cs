@@ -4,11 +4,11 @@ namespace RealTimeStockSimulator.Services.Interfaces
 {
     public interface IUsersService
     {
-        List<User> GetAllUsers();
-        User? GetUserByName(string userName);
-        User? GetUserByLoginCredentials(string userName, string password);
-        User? GetUserByUserId(int userId);
-        int AddUser(User user);
-        void UpdateUser(User user);
+        List<UserAccount> GetAllUsers();
+        UserAccount? GetUserByName(string userName);
+        UserAccount? GetUserByLoginCredentials(string userName, string password);
+        UserAccount? GetUserByUserId(int userId);
+        int AddUser(UserAccount user);
+        void UpdateUser(UserAccount user);
     }
 }

@@ -9,7 +9,7 @@ namespace RealTimeStockSimulator.Repositories
     {
         public DbMarketTransactionsRepository(IConfiguration configuration, IDataMapper dataMapper) : base(configuration, dataMapper) { }
 
-        public int AddTransaction(User user, MarketTransactionTradable transaction)
+        public int AddTransaction(UserAccount user, MarketTransactionTradable transaction)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -37,7 +37,7 @@ namespace RealTimeStockSimulator.Repositories
             }
         }
 
-        public MarketTransactions GetTransactionsByUserPagnated(User user)
+        public MarketTransactions GetTransactionsByUserPagnated(UserAccount user)
         {
             MarketTransactions transactions = new MarketTransactions(user, new List<MarketTransactionTradable>());
 

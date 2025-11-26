@@ -24,7 +24,7 @@ namespace RealTimeStockSimulator.Services
             }
         }
 
-        public int AddUser(User user)
+        public int AddUser(UserAccount user)
         {
             if (GetUserByName(user.UserName) != null)
             {
@@ -36,27 +36,27 @@ namespace RealTimeStockSimulator.Services
             return _usersRepository.AddUser(user);
         }
 
-        public User? GetUserByLoginCredentials(string userName, string password)
+        public UserAccount? GetUserByLoginCredentials(string userName, string password)
         {
             return _usersRepository.GetUserByLoginCredentials(userName, HashPassword(password));
         }
 
-        public User? GetUserByName(string userName)
+        public UserAccount? GetUserByName(string userName)
         {
             return _usersRepository.GetUserByName(userName);
         }
 
-        public void UpdateUser(User user)
+        public void UpdateUser(UserAccount user)
         {
             _usersRepository.UpdateUser(user);
         }
 
-        public List<User> GetAllUsers()
+        public List<UserAccount> GetAllUsers()
         {
             return _usersRepository.GetAllUsers();
         }
 
-        public User? GetUserByUserId(int userId)
+        public UserAccount? GetUserByUserId(int userId)
         {
             return _usersRepository.GetUserByUserId(userId);
         }

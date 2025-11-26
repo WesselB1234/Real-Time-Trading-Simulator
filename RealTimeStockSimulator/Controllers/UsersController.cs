@@ -22,7 +22,7 @@ namespace RealTimeStockSimulator.Controllers
 
         public IActionResult Portfolio(int userId)
         {
-            User? user = _usersService.GetUserByUserId(userId);
+            UserAccount? user = _usersService.GetUserByUserId(userId);
 
             if (user == null)
             {

@@ -12,12 +12,12 @@ namespace RealTimeStockSimulator.Services
             _marketTransactionsRepository = marketTransactionsRepository;
         }
 
-        public int AddTransaction(User user, MarketTransactionTradable transaction)
+        public int AddTransaction(UserAccount user, MarketTransactionTradable transaction)
         {
             return _marketTransactionsRepository.AddTransaction(user ,transaction);
         }
 
-        public MarketTransactions GetTransactionsByUserPagnated(User user)
+        public MarketTransactions GetTransactionsByUserPagnated(UserAccount user)
         {
             return _marketTransactionsRepository.GetTransactionsByUserPagnated(user);
         }
