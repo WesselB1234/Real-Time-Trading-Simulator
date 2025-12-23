@@ -52,12 +52,14 @@ namespace RealTimeStockSimulator.Controllers
 
         private OwnershipTradable GetOwnershipTradableFromBuySellViewModel(ConfirmBuySellViewModel confirmViewModel)
         {
+            UserAccount loggedInUser = _usersService.GetUserFromClaimsPrinciple(User);
+
             if (confirmViewModel.Symbol == null)
             {
                 throw new Exception("Symbol is empty.");
             }
 
-            OwnershipTradable? tradable = _ownershipsService.GetOwnershipTradableByUser(LoggedInUser, confirmViewModel.Symbol);
+            OwnershipTradable? tradable = _ownershipsService.GetOwnershipTradableByUser(loggedInUser, confirmViewModel.Symbol);
 
             if (tradable == null)
             {
@@ -91,6 +93,8 @@ namespace RealTimeStockSimulator.Controllers
 
         public IActionResult ConfirmBuy(ConfirmBuySellViewModel confirmViewModel)
         {
+            UserAccount loggedInUser = _usersService.GetUserFromClaimsPrinciple(User);
+
             try
             {
                 if (confirmViewModel.Amount == null || confirmViewModel.Amount < 1)
@@ -99,11 +103,11 @@ namespace RealTimeStockSimulator.Controllers
                 }
 
                 Tradable tradable = GetTradableFromBuySellViewModel(confirmViewModel);
-                decimal moneyAfterPurchase = _ownershipsService.BuyTradable(LoggedInUser, tradable, (int)confirmViewModel.Amount);
+                decimal moneyAfterPurchase = _ownershipsService.BuyTradable(loggedInUser, tradable, (int)confirmViewModel.Amount);
 
-                LoggedInUser.Money = moneyAfterPurchase;
-                HttpContext.Session.SetObject("LoggedInUser", LoggedInUser);
-                _usersService.UpdateUser(LoggedInUser);
+                loggedInUser.Money = moneyAfterPurchase;
+                HttpContext.Session.SetObject("LoggedInUser", loggedInUser);
+                _usersService.UpdateUser(loggedInUser);
 
                 TempData["ConfirmationMessage"] = "Buying successful.";
 
@@ -141,6 +145,8 @@ namespace RealTimeStockSimulator.Controllers
 
         public IActionResult ConfirmSell(ConfirmBuySellViewModel confirmViewModel)
         {
+            UserAccount loggedInUser = _usersService.GetUserFromClaimsPrinciple(User);
+
             try
             {
                 if (confirmViewModel.Amount == null || confirmViewModel.Amount < 1)
@@ -149,11 +155,11 @@ namespace RealTimeStockSimulator.Controllers
                 }
 
                 OwnershipTradable tradable = GetOwnershipTradableFromBuySellViewModel(confirmViewModel);
-                decimal moneyAfterSelling = _ownershipsService.SellTradable(LoggedInUser, tradable, (int)confirmViewModel.Amount);
+                decimal moneyAfterSelling = _ownershipsService.SellTradable(loggedInUser, tradable, (int)confirmViewModel.Amount);
 
-                LoggedInUser.Money = moneyAfterSelling;
-                HttpContext.Session.SetObject("LoggedInUser", LoggedInUser);
-                _usersService.UpdateUser(LoggedInUser);
+                loggedInUser.Money = moneyAfterSelling;
+                HttpContext.Session.SetObject("LoggedInUser", loggedInUser);
+                _usersService.UpdateUser(loggedInUser);
 
                 TempData["ConfirmationMessage"] = "Selling successful.";
 
