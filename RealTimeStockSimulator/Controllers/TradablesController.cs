@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using RealTimeStockSimulator.Extensions;
+using Microsoft.AspNetCore.Mvc.Filters;
 using RealTimeStockSimulator.Models;
 using RealTimeStockSimulator.Models.ViewModels;
 using RealTimeStockSimulator.Services.Interfaces;
@@ -10,15 +10,24 @@ namespace RealTimeStockSimulator.Controllers
     [Authorize]
     public class TradablesController : Controller
     {
-        private ITradablesService _tradablesService { get; set; }
-        private IOwnershipsService _ownershipsService { get; set; }
-        private IUsersService _usersService { get; set; }
+        private ITradablesService _tradablesService;
+        private IOwnershipsService _ownershipsService;
+        private IUsersService _usersService;
+        private UserAccount _loggedInUser;
 
         public TradablesController(ITradablesService tradablesService, IOwnershipsService ownershipsService, IUsersService usersService)
         {
             _tradablesService = tradablesService;
             _ownershipsService = ownershipsService;
             _usersService = usersService;
+        }
+
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            _loggedInUser = _usersService.GetUserFromClaimsPrinciple(User);
+
+            ViewBag.loggedInUser = _loggedInUser;
+            base.OnActionExecuting(context);
         }
 
         public IActionResult Index()
@@ -93,8 +102,6 @@ namespace RealTimeStockSimulator.Controllers
 
         public IActionResult ConfirmBuy(ConfirmBuySellViewModel confirmViewModel)
         {
-            UserAccount loggedInUser = _usersService.GetUserFromClaimsPrinciple(User);
-
             try
             {
                 if (confirmViewModel.Amount == null || confirmViewModel.Amount < 1)
@@ -103,11 +110,11 @@ namespace RealTimeStockSimulator.Controllers
                 }
 
                 Tradable tradable = GetTradableFromBuySellViewModel(confirmViewModel);
-                decimal moneyAfterPurchase = _ownershipsService.BuyTradable(loggedInUser, tradable, (int)confirmViewModel.Amount);
+                decimal moneyAfterPurchase = _ownershipsService.BuyTradable(_loggedInUser, tradable, (int)confirmViewModel.Amount);
 
-                loggedInUser.Money = moneyAfterPurchase;
-                HttpContext.Session.SetObject("LoggedInUser", loggedInUser);
-                _usersService.UpdateUser(loggedInUser);
+                _loggedInUser.Money = moneyAfterPurchase;
+                //HttpContext.Session.SetObject("LoggedInUser", loggedInUser);
+                _usersService.UpdateUser(_loggedInUser);
 
                 TempData["ConfirmationMessage"] = "Buying successful.";
 
@@ -145,8 +152,6 @@ namespace RealTimeStockSimulator.Controllers
 
         public IActionResult ConfirmSell(ConfirmBuySellViewModel confirmViewModel)
         {
-            UserAccount loggedInUser = _usersService.GetUserFromClaimsPrinciple(User);
-
             try
             {
                 if (confirmViewModel.Amount == null || confirmViewModel.Amount < 1)
@@ -155,11 +160,11 @@ namespace RealTimeStockSimulator.Controllers
                 }
 
                 OwnershipTradable tradable = GetOwnershipTradableFromBuySellViewModel(confirmViewModel);
-                decimal moneyAfterSelling = _ownershipsService.SellTradable(loggedInUser, tradable, (int)confirmViewModel.Amount);
+                decimal moneyAfterSelling = _ownershipsService.SellTradable(_loggedInUser, tradable, (int)confirmViewModel.Amount);
 
-                loggedInUser.Money = moneyAfterSelling;
-                HttpContext.Session.SetObject("LoggedInUser", loggedInUser);
-                _usersService.UpdateUser(loggedInUser);
+                _loggedInUser.Money = moneyAfterSelling;
+                //HttpContext.Session.SetObject("LoggedInUser", _loggedInUser);
+                _usersService.UpdateUser(_loggedInUser);
 
                 TempData["ConfirmationMessage"] = "Selling successful.";
 

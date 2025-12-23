@@ -2,6 +2,7 @@
 using RealTimeStockSimulator.Services.Interfaces;
 using RealTimeStockSimulator.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace RealTimeStockSimulator.Controllers
 {
@@ -10,11 +11,20 @@ namespace RealTimeStockSimulator.Controllers
     {
         private IUsersService _usersService;
         private IOwnershipsService _ownershipsService;
+        private UserAccount _loggedInUser;
 
         public UsersController(IUsersService usersService, IOwnershipsService ownershipsService)
         {
             _usersService = usersService;
             _ownershipsService = ownershipsService;
+        }
+
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            _loggedInUser = _usersService.GetUserFromClaimsPrinciple(User);
+
+            ViewBag.loggedInUser = _loggedInUser;
+            base.OnActionExecuting(context);
         }
 
         public IActionResult Index()
