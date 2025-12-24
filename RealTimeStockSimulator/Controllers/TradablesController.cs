@@ -38,7 +38,7 @@ namespace RealTimeStockSimulator.Controllers
             return View(tradables);
         }
 
-        public IActionResult Buy(ConfirmBuySellViewModel confirmViewModel)
+        public IActionResult Buy(BuySellViewModel confirmViewModel)
         {
             try
             {
@@ -55,7 +55,7 @@ namespace RealTimeStockSimulator.Controllers
             }
         }
 
-        public async Task<IActionResult> ProcessBuy(ConfirmBuySellViewModel confirmViewModel)
+        public async Task<IActionResult> ProcessBuy(BuySellViewModel confirmViewModel)
         {
             Tradable? tradable = null;
 
@@ -93,7 +93,7 @@ namespace RealTimeStockSimulator.Controllers
             }
         }
 
-        public IActionResult Sell(ConfirmBuySellViewModel confirmViewModel)
+        public IActionResult Sell(BuySellViewModel confirmViewModel)
         {
             try
             {
@@ -115,7 +115,7 @@ namespace RealTimeStockSimulator.Controllers
             }
         }
 
-        public async Task<IActionResult> ProcessSell(ConfirmBuySellViewModel confirmViewModel)
+        public async Task<IActionResult> ProcessSell(BuySellViewModel confirmViewModel)
         {
             OwnershipTradable? tradable = null;
 

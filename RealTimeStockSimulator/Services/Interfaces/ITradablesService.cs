@@ -7,7 +7,7 @@ namespace RealTimeStockSimulator.Services.Interfaces
     {
         List<Tradable> GetAllTradables();
         Task<List<Tradable>> GetAllTradablesWithApiDataAsync(CancellationToken cancellationToken);
-        Tradable GetTradableFromBuySellViewModel(ConfirmBuySellViewModel confirmViewModel);
+        Tradable GetTradableFromBuySellViewModel(BuySellViewModel confirmViewModel);
         Tradable? GetTradableBySymbol(string symbol);
     }
 }
