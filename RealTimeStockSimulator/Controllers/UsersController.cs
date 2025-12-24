@@ -43,7 +43,7 @@ namespace RealTimeStockSimulator.Controllers
                 return RedirectToAction("Index", "Portfolio");
             }
 
-            Ownership ownership = _ownershipsService.GetOwnershipByUser(user);
+            Ownership ownership = new Ownership(user, _ownershipsService.GetAllOwnershipTradablesByUserId(user.UserId));
 
             return View(ownership);
         }

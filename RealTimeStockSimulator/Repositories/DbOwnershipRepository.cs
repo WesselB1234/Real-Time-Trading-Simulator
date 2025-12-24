@@ -9,9 +9,9 @@ namespace RealTimeStockSimulator.Repositories
     {
         public DbOwnershipRepository(IConfiguration configuration, IDataMapper dataMapper) : base(configuration, dataMapper) { }
 
-        public Ownership GetOwnershipByUser(UserAccount user)
+        public List<OwnershipTradable> GetAllOwnershipTradablesByUserId(int userId)
         {
-            Ownership ownership = new Ownership(user, new List<OwnershipTradable>());
+            List<OwnershipTradable> ownershipTradables = new List<OwnershipTradable>();
             
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -21,18 +21,18 @@ namespace RealTimeStockSimulator.Repositories
 
                 SqlCommand command = new SqlCommand(query, connection);
 
-                command.Parameters.AddWithValue("@UserId", ownership.User.UserId);
+                command.Parameters.AddWithValue("@UserId", userId);
                 command.Connection.Open();
 
                 SqlDataReader reader = command.ExecuteReader();
 
                 while (reader.Read())
                 {
-                    ownership.Tradables.Add(_dataMapper.MapOwnershipTradable(reader));
+                    ownershipTradables.Add(_dataMapper.MapOwnershipTradable(reader));
                 }
             }
 
-            return ownership;
+            return ownershipTradables;
         }
 
         public OwnershipTradable? GetOwnershipTradableByUserId(int userId, string symbol)
@@ -59,7 +59,7 @@ namespace RealTimeStockSimulator.Repositories
             return null;
         }
 
-        public void AddOwnershipTradableToUser(UserAccount user, OwnershipTradable tradable)
+        public void AddOwnershipTradableToUserId(int userId, OwnershipTradable tradable)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -67,7 +67,7 @@ namespace RealTimeStockSimulator.Repositories
                     $"VALUES (@UserId, @Symbol, @Amount);";
                 SqlCommand command = new SqlCommand(query, connection);
 
-                command.Parameters.AddWithValue("@UserId", user.UserId);
+                command.Parameters.AddWithValue("@UserId", userId);
                 command.Parameters.AddWithValue("@Symbol", tradable.Symbol);
                 command.Parameters.AddWithValue("@Amount", tradable.Amount);
                 command.Connection.Open();
@@ -76,7 +76,7 @@ namespace RealTimeStockSimulator.Repositories
             }
         }
 
-        public void UpdateOwnershipTradable(UserAccount user, OwnershipTradable tradable)
+        public void UpdateOwnershipTradable(int userId, OwnershipTradable tradable)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -85,7 +85,7 @@ namespace RealTimeStockSimulator.Repositories
                     "WHERE user_id = @UserId AND symbol = @Symbol;";
                 SqlCommand command = new SqlCommand(query, connection);
 
-                command.Parameters.AddWithValue("@UserId", user.UserId);
+                command.Parameters.AddWithValue("@UserId", userId);
                 command.Parameters.AddWithValue("@Symbol", tradable.Symbol);
                 command.Parameters.AddWithValue("@Amount", tradable.Amount);
                 command.Connection.Open();
@@ -94,7 +94,7 @@ namespace RealTimeStockSimulator.Repositories
             }
         }
 
-        public void RemoveOwnershipTradableFromUser(UserAccount user, OwnershipTradable tradable)
+        public void RemoveOwnershipTradableFromUserId(int userId, OwnershipTradable tradable)
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
@@ -102,12 +102,17 @@ namespace RealTimeStockSimulator.Repositories
                     "WHERE user_id = @UserId AND symbol = @Symbol;";
                 SqlCommand command = new SqlCommand(query, connection);
 
-                command.Parameters.AddWithValue("@UserId", user.UserId);
+                command.Parameters.AddWithValue("@UserId", userId);
                 command.Parameters.AddWithValue("@Symbol", tradable.Symbol);
                 command.Connection.Open();
 
                 command.ExecuteScalar();
             }
+        }
+
+        public List<Ownership> GetOrderedOwnershipsPagnated(int userId, int pageSize, int currentPage)
+        {
+            throw new NotImplementedException();
         }
     }
 }

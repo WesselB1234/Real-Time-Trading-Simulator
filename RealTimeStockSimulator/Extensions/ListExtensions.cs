@@ -2,7 +2,7 @@
 
 namespace RealTimeStockSimulator.Extensions
 {
-    public static class SessionExtensions
+    public static class ListExtensions
     {
         public static void SetObject<T>(this ISession session, string key, T value)
         {

@@ -22,16 +22,16 @@ namespace RealTimeStockSimulator.Services
             _mapper = mapper;
         }
 
-        public Ownership GetOwnershipByUser(UserAccount user)
+        public List<OwnershipTradable> GetAllOwnershipTradablesByUserId(int userId)
         {
-            Ownership ownership = _ownershipsRepository.GetOwnershipByUser(user);
+            List<OwnershipTradable> ownershipTradables = _ownershipsRepository.GetAllOwnershipTradablesByUserId(userId);
           
-            foreach (OwnershipTradable tradable in ownership.Tradables)
+            foreach (OwnershipTradable tradable in ownershipTradables)
             {
                 tradable.TradablePriceInfos = _priceInfosService.GetPriceInfosBySymbol(tradable.Symbol);
             }
 
-            return ownership;
+            return ownershipTradables;
         }
 
         public OwnershipTradable? GetOwnershipTradableByUserId(int userId, string symbol)
@@ -46,19 +46,19 @@ namespace RealTimeStockSimulator.Services
             return tradable;
         }
 
-        public void AddOwnershipTradableToUser(UserAccount user, OwnershipTradable tradable)
+        public void AddOwnershipTradableToUserId(int userId, OwnershipTradable tradable)
         {
-            _ownershipsRepository.AddOwnershipTradableToUser(user, tradable);
+            _ownershipsRepository.AddOwnershipTradableToUserId(userId, tradable);
         }
 
-        public void UpdateOwnershipTradable(UserAccount user, OwnershipTradable tradable)
+        public void UpdateOwnershipTradable(int userId, OwnershipTradable tradable)
         {
-            _ownershipsRepository.UpdateOwnershipTradable(user, tradable);
+            _ownershipsRepository.UpdateOwnershipTradable(userId, tradable);
         }
 
-        public void RemoveOwnershipTradableFromUser(UserAccount user, OwnershipTradable tradable)
+        public void RemoveOwnershipTradableFromUserId(int userId, OwnershipTradable tradable)
         {
-            _ownershipsRepository.RemoveOwnershipTradableFromUser(user, tradable);
+            _ownershipsRepository.RemoveOwnershipTradableFromUserId(userId, tradable);
         }
 
         private void LogOrderTransaction(int userId, Tradable tradable, MarketTransactionStatus status, int amount)
@@ -82,11 +82,11 @@ namespace RealTimeStockSimulator.Services
             if (ownershipTradable != null)
             {
                 ownershipTradable.Amount += amount;
-                UpdateOwnershipTradable(user, ownershipTradable);
+                UpdateOwnershipTradable(user.UserId, ownershipTradable);
             }
             else
             {
-                AddOwnershipTradableToUser(user, _mapper.MapOwnershipTradableByTradable(tradable, amount));
+                AddOwnershipTradableToUserId(user.UserId, _mapper.MapOwnershipTradableByTradable(tradable, amount));
             }
 
             LogOrderTransaction(user.UserId, tradable, MarketTransactionStatus.Bought, amount);
@@ -106,11 +106,11 @@ namespace RealTimeStockSimulator.Services
             if (ownershipTradable != null && ownershipTradable.Amount - amount >= 1)
             {
                 ownershipTradable.Amount -= amount;
-                UpdateOwnershipTradable(user, ownershipTradable);
+                UpdateOwnershipTradable(user.UserId, ownershipTradable);
             }
             else
             {
-                RemoveOwnershipTradableFromUser(user, tradable);
+                RemoveOwnershipTradableFromUserId(user.UserId, tradable);
             }
 
             LogOrderTransaction(user.UserId, tradable, MarketTransactionStatus.Sold, amount);
@@ -138,6 +138,11 @@ namespace RealTimeStockSimulator.Services
             }
 
             return tradable;
+        }
+
+        public List<Ownership> GetOrderedOwnershipsPagnated(int userId, int pageSize, int currentPage)
+        {
+            throw new NotImplementedException();
         }
     }
 }

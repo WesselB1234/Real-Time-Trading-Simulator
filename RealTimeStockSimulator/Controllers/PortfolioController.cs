@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using RealTimeStockSimulator.Models;
 using RealTimeStockSimulator.Services.Interfaces;
-using System.Security.Claims;
 
 namespace RealTimeStockSimulator.Controllers
 {
@@ -30,7 +29,7 @@ namespace RealTimeStockSimulator.Controllers
 
         public IActionResult Index()
         {
-            return View(_ownershipsService.GetOwnershipByUser(_loggedInUser));
+            return View(_ownershipsService.GetAllOwnershipTradablesByUserId(_loggedInUser.UserId));
         }
     }
 }

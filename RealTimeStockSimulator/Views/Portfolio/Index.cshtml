@@ -1,5 +1,5 @@
 ﻿@{
-    @model Ownership
+    @model List<RealTimeStockSimulator.Models.OwnershipTradable>
     @inject RealTimeStockSimulator.Models.Interfaces.IStringFormatter stringFormatter
     @using System.Text.Json
 
@@ -13,7 +13,7 @@
         Portfolio
     </h1>
     <h2>
-        Total value: <span class="TotalOwnershipValue">$@stringFormatter.FormatDecimalPrice(@Model.TotalOwnershipValue)</span>
+        Total value: <span class="TotalOwnershipValue">$@stringFormatter.FormatDecimalPrice(0)</span>
     </h2>
 
     <partial name="_ErrorMessage" />
@@ -38,7 +38,7 @@
         </thead>
         <tbody>
             @{
-                foreach (OwnershipTradable tradable in Model.Tradables)    
+                foreach (OwnershipTradable tradable in Model)    
                 {
                     <tr> 
                         <td> 
@@ -69,7 +69,7 @@
 </main>
 
 <script>
-    var ownershipJson = @Html.Raw(JsonSerializer.Serialize(Model.Tradables))
+    var ownershipJson = @Html.Raw(JsonSerializer.Serialize(Model))
 </script>
 
 <partial name="_Footer" />

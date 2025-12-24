@@ -4,10 +4,11 @@ namespace RealTimeStockSimulator.Repositories.Interfaces
 {
     public interface IOwnershipsRepository
     {
-        Ownership GetOwnershipByUser(UserAccount user);
+        List<OwnershipTradable> GetAllOwnershipTradablesByUserId(int userId);
+        List<Ownership> GetOrderedOwnershipsPagnated(int userId, int pageSize, int currentPage);
         OwnershipTradable? GetOwnershipTradableByUserId(int userId, string symbol);
-        void AddOwnershipTradableToUser(UserAccount user, OwnershipTradable tradable);
-        void UpdateOwnershipTradable(UserAccount user, OwnershipTradable tradable);
-        void RemoveOwnershipTradableFromUser(UserAccount user, OwnershipTradable tradable);
+        void AddOwnershipTradableToUserId(int userId, OwnershipTradable tradable);
+        void UpdateOwnershipTradable(int userId, OwnershipTradable tradable);
+        void RemoveOwnershipTradableFromUserId(int userId, OwnershipTradable tradable);
     }
 }
