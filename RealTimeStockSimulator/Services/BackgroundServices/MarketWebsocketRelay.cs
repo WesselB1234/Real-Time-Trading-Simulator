@@ -1,9 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Caching.Memory;
 using RealTimeStockSimulator.Hubs;
 using RealTimeStockSimulator.Models;
-using RealTimeStockSimulator.Models.Interfaces;
 using RealTimeStockSimulator.Repositories.Interfaces;
 using System.Net.WebSockets;
 using System.Text;
