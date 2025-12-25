@@ -1,8 +1,3 @@
-﻿@{
-    if (TempData["ErrorMessage"] != null)
-    {
-        <div class="alert alert-danger" role="alert">
-            @TempData["ErrorMessage"]
-        </div>
-    }
-}
+﻿<div class="alert alert-danger @(TempData["ErrorMessage"] == null ? "d-none" : "")" id="errorAlert" role="alert">
+    @(TempData["ErrorMessage"] != null ? TempData["ErrorMessage"] : "")
+</div>
