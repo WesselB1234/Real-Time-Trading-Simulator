@@ -7,7 +7,7 @@ namespace RealTimeStockSimulator.Models
         [JsonPropertyName("data")]
         public List<IncomingMarketWebsocketTradable> Data { get; set; }
         [JsonPropertyName("type")]
-        public string? Type { get; set; }
+        public string Type { get; set; }
 
         public IncomingMarketWebsocketPayload(List<IncomingMarketWebsocketTradable> data, string type)
         {

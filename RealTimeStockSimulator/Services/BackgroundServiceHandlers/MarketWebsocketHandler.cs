@@ -18,7 +18,7 @@ namespace RealTimeStockSimulator.Services.BackgroundServiceHandlers
             _priceInfosService = priceInfosService;
         }
 
-        public async Task HandleMarketWebSocketPayload(IncomingMarketWebsocketTradable incomingTradable)
+        public async Task HandleMarketWebSocketPayload(IncomingMarketWebsocketTradable incomingTradable, CancellationToken cancellationToken)
         {
             TradablePriceInfos? tradablePriceInfos = _priceInfosService.GetPriceInfosBySymbol(incomingTradable.Symbol);
 
@@ -28,7 +28,7 @@ namespace RealTimeStockSimulator.Services.BackgroundServiceHandlers
                 TradableUpdatePayload tradableUpdatePayload = new TradableUpdatePayload(incomingTradable.Symbol, tradablePriceInfos);
                 _priceInfosService.SetPriceInfosBySymbol(incomingTradable.Symbol, tradablePriceInfos);
 
-                await _hubContext.Clients.All.SendAsync("ReceiveMarketData", JsonSerializer.Serialize(tradableUpdatePayload), CancellationToken.None);
+                await _hubContext.Clients.All.SendAsync("ReceiveMarketData", JsonSerializer.Serialize(tradableUpdatePayload), cancellationToken);
             }
         }
     }

@@ -4,6 +4,6 @@ namespace RealTimeStockSimulator.Services.Interfaces
 {
     public interface IMarketWebsocketHandler
     {
-        Task HandleMarketWebSocketPayload(IncomingMarketWebsocketTradable incomingTradable);
+        Task HandleMarketWebSocketPayload(IncomingMarketWebsocketTradable incomingTradable, CancellationToken cancellationToken);
     }
 }

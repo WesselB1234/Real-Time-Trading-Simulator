@@ -13,5 +13,11 @@ namespace RealTimeStockSimulator.Models
         {
 
         }
+
+        public IncomingMarketWebsocketTradable(string? symbol, decimal? price)
+        {
+            Symbol = symbol;
+            Price = price;
+        }
     }
 }
