@@ -1,8 +1,6 @@
-﻿
-using Microsoft.AspNetCore.SignalR;
-using RealTimeStockSimulator.Hubs;
-using RealTimeStockSimulator.Models;
+﻿using RealTimeStockSimulator.Models;
 using RealTimeStockSimulator.Repositories.Interfaces;
+using RealTimeStockSimulator.Services.Interfaces;
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
@@ -17,14 +15,14 @@ namespace RealTimeStockSimulator.Services.BackgroundServices
         };
 
         private string? _marketApiKey;
-        private IHubContext<MarketHub> _hubContext;
         private ITradablePriceInfosService _priceInfosService;
+        private IMarketWebsocketHandler _marketWebsocketHandler;
 
-        public MarketWebsocketRelay(IConfiguration configuration, IHubContext<MarketHub> hubContext, ITradablePriceInfosService priceInfosService)
+        public MarketWebsocketRelay(IConfiguration configuration, ITradablePriceInfosService priceInfosService, IMarketWebsocketHandler marketWebsocketHandler)
         {
             _marketApiKey = configuration.GetValue<string>("ApiKeyStrings:MarketApiKey");
-            _hubContext = hubContext;
             _priceInfosService = priceInfosService;
+            _marketWebsocketHandler = marketWebsocketHandler;
         }
 
         private async Task SubscribeToTradablesInCache(ClientWebSocket client)
@@ -38,21 +36,21 @@ namespace RealTimeStockSimulator.Services.BackgroundServices
             }
         }
 
-        private async Task HandleMarketWebSocketPayload(MarketWebsocketPayload marketPayload)
-        {
-            MarketWebsocketTradable responseTradable = marketPayload.Data[marketPayload.Data.Count - 1];
-            TradablePriceInfos? tradablePriceInfos = _priceInfosService.GetPriceInfosBySymbol(responseTradable.Symbol);
+        //private async Task HandleMarketWebSocketPayload(IncomingMarketWebsocketPayload marketPayload)
+        //{
+        //    IncomingMarketWebsocketTradable responseTradable = marketPayload.Data[marketPayload.Data.Count - 1];
+        //    TradablePriceInfos? tradablePriceInfos = _priceInfosService.GetPriceInfosBySymbol(responseTradable.Symbol);
 
-            if (responseTradable.Price != null && tradablePriceInfos != null && tradablePriceInfos.Price != responseTradable.Price)
-            {
-                tradablePriceInfos.Price = (decimal)responseTradable.Price;
-                TradableUpdatePayload tradableUpdatePayload = new TradableUpdatePayload(responseTradable.Symbol, tradablePriceInfos);
+        //    if (responseTradable.Price != null && tradablePriceInfos != null && tradablePriceInfos.Price != responseTradable.Price)
+        //    {
+        //        tradablePriceInfos.Price = (decimal)responseTradable.Price;
+        //        TradableUpdatePayload tradableUpdatePayload = new TradableUpdatePayload(responseTradable.Symbol, tradablePriceInfos);
 
-                _priceInfosService.SetPriceInfosBySymbol(responseTradable.Symbol, tradablePriceInfos);
+        //        _priceInfosService.SetPriceInfosBySymbol(responseTradable.Symbol, tradablePriceInfos);
 
-                await _hubContext.Clients.All.SendAsync("ReceiveMarketData", JsonSerializer.Serialize(tradableUpdatePayload), CancellationToken.None);
-            }
-        }
+        //        await _hubContext.Clients.All.SendAsync("ReceiveMarketData", JsonSerializer.Serialize(tradableUpdatePayload), CancellationToken.None);
+        //    }
+        //}
 
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
@@ -77,11 +75,11 @@ namespace RealTimeStockSimulator.Services.BackgroundServices
                     }
 
                     string json = Encoding.UTF8.GetString(buffer, 0, result.Count);
-                    MarketWebsocketPayload? marketPayload = JsonSerializer.Deserialize<MarketWebsocketPayload>(json);
+                    IncomingMarketWebsocketPayload? marketPayload = JsonSerializer.Deserialize<IncomingMarketWebsocketPayload>(json);
 
                     if (marketPayload != null && marketPayload.Type == "trade")
                     {
-                        await HandleMarketWebSocketPayload(marketPayload);
+                        await _marketWebsocketHandler.HandleMarketWebSocketPayload(marketPayload);
                     }
                 }
             }

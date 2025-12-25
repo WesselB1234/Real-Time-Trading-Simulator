@@ -1,9 +1,8 @@
 ﻿using Microsoft.Data.SqlClient;
 using RealTimeStockSimulator.Models.Enums;
 using RealTimeStockSimulator.Models.Interfaces;
-using System.Data;
 
-namespace RealTimeStockSimulator.Models
+namespace RealTimeStockSimulator.Models.Static
 {
     public class DataMapper : IDataMapper
     {

@@ -1,7 +1,7 @@
 ﻿using RealTimeStockSimulator.Models.Interfaces;
 using System.Globalization;
 
-namespace RealTimeStockSimulator.Models
+namespace RealTimeStockSimulator.Models.Static
 {
     public class StringFormatter : IStringFormatter
     {

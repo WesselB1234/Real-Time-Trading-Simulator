@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Identity;
 using RealTimeStockSimulator.Hubs;
-using RealTimeStockSimulator.Models;
 using RealTimeStockSimulator.Models.Enums;
 using RealTimeStockSimulator.Models.Interfaces;
+using RealTimeStockSimulator.Models.Static;
 using RealTimeStockSimulator.Repositories;
 using RealTimeStockSimulator.Repositories.Interfaces;
 using RealTimeStockSimulator.Services;
+using RealTimeStockSimulator.Services.BackgroundServiceHandlers;
 using RealTimeStockSimulator.Services.BackgroundServices;
 using RealTimeStockSimulator.Services.HostedServices;
 using RealTimeStockSimulator.Services.Interfaces;
@@ -45,6 +46,7 @@ namespace RealTimeStockSimulator
             builder.Services.AddSingleton<IOwnershipsService, OwnershipsService>();
             builder.Services.AddSingleton<IMarketTransactionsService, MarketTransactionsService>();
             builder.Services.AddSingleton<ITradablePriceInfosService, TradablePriceInfosService>();
+            builder.Services.AddSingleton<IMarketWebsocketHandler, MarketWebsocketHandler>();
 
             builder.Services.AddSingleton<IStringFormatter, StringFormatter>();
             builder.Services.AddSingleton<IDataMapper, DataMapper>();
