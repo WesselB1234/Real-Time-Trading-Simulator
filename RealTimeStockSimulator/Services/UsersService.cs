@@ -2,6 +2,7 @@
 using RealTimeStockSimulator.Models;
 using RealTimeStockSimulator.Repositories.Interfaces;
 using RealTimeStockSimulator.Services.Interfaces;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -26,11 +27,29 @@ namespace RealTimeStockSimulator.Services
             }
         }
 
+        private bool IsValidEmail(string email)
+        {
+            try
+            {
+                MailAddress mail = new MailAddress(email);
+                return mail.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public int AddUser(UserAccount user)
         {
+            if (IsValidEmail(user.Email) == false)
+            {
+                throw new Exception($"'{user.Email}' is not a valid email address.");
+            }
+
             if (GetUserByName(user.UserName) != null)
             {
-                throw new Exception("User already exists.");
+                throw new Exception($"User with name '{user.UserName}' already exists.");
             }
 
             user.Password = HashPassword(user.Password);
