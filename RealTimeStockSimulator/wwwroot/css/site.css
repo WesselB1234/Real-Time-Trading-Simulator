@@ -24,3 +24,31 @@ footer{
 .auth-box {
     max-width: 480px;
 }
+
+up-price-update, td.up-price-update {
+    animation: flash-green 1s ease-out;
+}
+
+down-price-update, td.down-price-update {
+    animation: flash-red 1s ease-out;
+}
+
+@keyframes flash-green {
+    0% {
+        background-color: #00ff21;
+    }
+
+    100% {
+        background-color: transparent;
+    }
+}
+
+@keyframes flash-red {
+    0% {
+        background-color: #ff0000;
+    }
+
+    100% {
+        background-color: transparent;
+    }
+}

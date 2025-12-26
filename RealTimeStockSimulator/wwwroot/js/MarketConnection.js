@@ -1,75 +1,85 @@
-﻿function IsNumber(value) {
-    return !isNaN(parseFloat(value)) && isFinite(value)
+﻿function isNumber(value) {
+    return !isNaN(parseFloat(value)) && isFinite(value);
 }
 
-function UpdatePriceLabel(updatedSymbol, newPrice) {
+function updatePriceLabels(updatedSymbol, newPrice) {
 
     const priceLabels = document.querySelectorAll(
         `[data-price-symbol="${updatedSymbol}"]`
-    )
+    );
 
-    for (let priceLabel of priceLabels) {
+    for (const priceLabel of priceLabels) {
 
-        priceLabel.dataset.price = newPrice
-
-        if (IsNumber(priceLabel.dataset.amountLabelNumber) != false) {
+        if (isNumber(priceLabel.dataset.amountLabelNumber) != false) {
 
             const amountLabel = document.querySelector(
                 `[data-amount-label-symbol="${updatedSymbol}"][data-amount-label-number="${priceLabel.dataset.amountLabelNumber}"]`
-            )
+            );
 
-            const amount = parseInt(amountLabel.dataset.amountLabelValue)
-            newPrice *= amount
+            const amount = parseInt(amountLabel.dataset.amountLabelValue);
+            newPrice *= amount;
         }
 
-        priceLabel.textContent = FormatPrice(newPrice)
+        let currentPrice = priceLabel.dataset.price;
+
+        if (newPrice > currentPrice) {
+            priceLabel.classList.remove("down-price-update");
+            priceLabel.classList.add("up-price-update");
+        }
+        else if (newPrice < currentPrice) {
+            priceLabel.classList.remove("up-price-update");
+            priceLabel.classList.add("down-price-update");
+        }
+
+        priceLabel.textContent = formatPrice(newPrice);
+        priceLabel.dataset.price = newPrice;
     }
 }
 
-function UpdateOwnershipLabels(updatedSymbol, newPrice) {
+function updateOwnershipLabels(updatedSymbol, newPrice) {
 
-    let totalPriceOfOwnership = 0
+    let totalPriceOfOwnership = 0;
 
     ownershipJson.forEach((entry) => {
 
         if (updatedSymbol === entry.Symbol) {
-            entry.TradablePriceInfos.Price = newPrice
+            entry.TradablePriceInfos.Price = newPrice;
         }
 
-        const totalPrice = entry.TradablePriceInfos.Price * entry.Amount
-        totalPriceOfOwnership += totalPrice
+        const totalPrice = entry.TradablePriceInfos.Price * entry.Amount;
+        totalPriceOfOwnership += totalPrice;
     })
 
-    const TotalOwnershipValueLabels = document.getElementsByClassName("TotalOwnershipValue")
+    const TotalOwnershipValueLabels = document.getElementsByClassName("TotalOwnershipValue");
 
     for (let totalOwnershipValueLabel of TotalOwnershipValueLabels) {
-        totalOwnershipValueLabel.textContent = FormatPrice(totalPriceOfOwnership)
+        totalOwnershipValueLabel.textContent = formatPrice(totalPriceOfOwnership);
     }
 }
 
-function OnMarketData(message) {
+function onMarketData(message) {
 
-    const tradableUpdatePayload = JSON.parse(message)
-    const tradablePriceInfos = tradableUpdatePayload["TradablePriceInfos"]
-    const updatedSymbol = tradableUpdatePayload["Symbol"]
-    const newPrice = tradablePriceInfos["Price"]
+    const tradableUpdatePayload = JSON.parse(message);
+    const tradablePriceInfos = tradableUpdatePayload["TradablePriceInfos"];
+    const updatedSymbol = tradableUpdatePayload["Symbol"];
+    const newPrice = tradablePriceInfos["Price"];
 
-    UpdatePriceLabel(updatedSymbol, newPrice)
+    updatePriceLabels(updatedSymbol, newPrice);
 
     if (ownershipJson !== null) {
-        UpdateOwnershipLabels(updatedSymbol, newPrice)
+        updateOwnershipLabels(updatedSymbol, newPrice);
     }
 }
 
-function InitMarketConnection() {
+function initMarketConnection() {
 
-    CurrentConnection = new signalR.HubConnectionBuilder().withUrl("/marketHub").build()
+    CurrentConnection = new signalR.HubConnectionBuilder().withUrl("/marketHub").build();
 
-    CurrentConnection.start()
-    CurrentConnection.on("ReceiveMarketData", OnMarketData)
+    CurrentConnection.start();
+    CurrentConnection.on("ReceiveMarketData", onMarketData);
     window.addEventListener("beforeunload", () => {
-        CurrentSocket.close()
-    })
+        CurrentSocket.close();
+    });
 }
 
-InitMarketConnection()
+initMarketConnection();

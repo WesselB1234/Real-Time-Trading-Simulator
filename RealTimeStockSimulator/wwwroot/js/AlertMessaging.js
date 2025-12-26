@@ -1,12 +1,12 @@
 ﻿function displayErrorAlert(messageStr) {
 
-    let errorAlert = document.getElementById("errorAlert");
+    const errorAlert = document.getElementById("errorAlert");
 
     if (errorAlert === null) {
         throw new Error("Error alert container doesn't exist yet.");
     }
 
-    let errorMessageHolder = document.getElementById("errorMessageHolder");
+    const errorMessageHolder = document.getElementById("errorMessageHolder");
 
     if (errorMessageHolder === null) {
         throw new Error("error message holder doesn't exist yet.");
@@ -18,7 +18,7 @@
 
 function displaySuccessAlert(messageStr) {
 
-    successAlert = document.getElementById("successAlert");
+    const successAlert = document.getElementById("successAlert");
 
     if (successAlert === null) {
         throw new Error("Success alert container doesn't exist yet.");
