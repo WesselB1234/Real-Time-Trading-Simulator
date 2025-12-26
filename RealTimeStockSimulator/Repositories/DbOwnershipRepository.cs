@@ -116,10 +116,11 @@ namespace RealTimeStockSimulator.Repositories
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "SELECT Users.user_id, username, email, [money], " +
+                string query = "SELECT Ownership.user_id, username, email, [money], " +
                     "symbol, amount " +
                     "FROM Ownership " +
-                    "JOIN Users ON Ownership.user_id = Users.user_id;";
+                    "JOIN Users ON Ownership.user_id = Users.user_id " +
+                    "ORDER BY Ownership.user_id;";
 
                 SqlCommand command = new SqlCommand(query, connection);
 

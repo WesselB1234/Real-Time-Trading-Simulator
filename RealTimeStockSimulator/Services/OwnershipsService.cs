@@ -1,4 +1,5 @@
-﻿using RealTimeStockSimulator.Models;
+﻿using RealTimeStockSimulator.Extensions;
+using RealTimeStockSimulator.Models;
 using RealTimeStockSimulator.Models.Enums;
 using RealTimeStockSimulator.Models.Helpers;
 using RealTimeStockSimulator.Models.ViewModels;
@@ -140,7 +141,17 @@ namespace RealTimeStockSimulator.Services
 
         public List<Ownership> GetOrderedOwnershipsPagnated(int pageSize, int currentPage)
         {
-            return _ownershipsRepository.GetOrderedOwnershipsPagnated(pageSize, currentPage);
+            List<Ownership> ownerships = _ownershipsRepository.GetOrderedOwnershipsPagnated(pageSize, currentPage);
+
+            foreach (Ownership ownership in ownerships)
+            {
+                foreach (OwnershipTradable tradable in ownership.Tradables)
+                {
+                    tradable.TradablePriceInfos = _priceInfosService.GetPriceInfosBySymbol(tradable.Symbol);
+                }
+            }
+            
+            return ownerships.OrderByDescending(o => o.Tradables.GetTotalOwnershipValue()).ToList();
         }
     }
 }
