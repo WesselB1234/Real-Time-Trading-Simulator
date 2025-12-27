@@ -100,6 +100,10 @@ function updateMultiOwnershipLabels(updatedSymbol, newPrice) {
             setPriceLabelUpdatePrice(totalOwnershipValueLabel, totalPriceOfOwnership);
         }
     })
+
+    if (typeof onMultiOwnershipLabelsUpdate !== "undefined") {
+        onMultiOwnershipLabelsUpdate();
+    }
 }
 
 function onMarketData(message) {
