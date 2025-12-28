@@ -1,6 +1,7 @@
 :root {
-    --primary-color: #CB2E5D;
-    --light-primary-color: #c98398;
+    --primary-color: #25aa7bff;
+    --light-primary-color: #a4e7cfff;
+    --dark-primary-color: #1f8662ff;
 }
 
 main {
@@ -15,11 +16,26 @@ main {
     color: var(--primary-color);
 }
 
+.primary-custom-btn {
+    background-color: var(--primary-color);
+    color: #FFFFFF;
+}
+
+.primary-custom-btn:hover {
+    background-color: var(--dark-primary-color);
+    color: #FFFFFF;
+}
+
 footer {
     display: flex;
     height: 90px;
     align-items: center;
     vertical-align: middle;
+}
+
+.nav-pill-enabled {
+    background-color: var(--dark-primary-color);
+    border-radius: 25px;
 }
 
 .auth-main {
