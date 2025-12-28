@@ -3,6 +3,10 @@
     --light-primary-color: #c98398;
 }
 
+main {
+    min-height: calc(100vh - 187px);
+}
+
 .primary-background-color {
     background-color: var(--primary-color);
 }
@@ -11,9 +15,11 @@
     color: var(--primary-color);
 }
 
-footer{
-    height: 50px;
-    text-align:center;
+footer {
+    display: flex;
+    height: 90px;
+    align-items: center;
+    vertical-align: middle;
 }
 
 .auth-main {
@@ -45,6 +51,16 @@ down-price-update, td.down-price-update, span.down-price-update {
 .leaderboard-table thead th,
 .leaderboard-table tbody td {
     flex: 1;
+}
+
+table td {
+    vertical-align: middle; 
+}
+
+.tradable-img {
+    object-fit: cover;
+    height: 40px;
+    width: 40px;
 }
 
 @keyframes flash-green {

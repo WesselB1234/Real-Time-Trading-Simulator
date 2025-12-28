@@ -24,6 +24,9 @@
         <thead>
             <tr>
                 <th>
+                    Asset
+                </th>
+                <th>
                     Symbol
                 </th>
                 <th>
@@ -44,7 +47,11 @@
             @{
                 foreach (OwnershipTradable tradable in Model)    
                 {
-                    <tr> 
+                    <tr>
+                        <td>
+                            <img class="tradable-img" src="" alt="" />
+                            <span>testname</span>
+                        </td>
                         <td> 
                             @tradable.Symbol    
                         </td>
