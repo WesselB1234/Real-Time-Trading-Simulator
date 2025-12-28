@@ -73,7 +73,7 @@ namespace RealTimeStockSimulator.Controllers
                 await HttpContext.SignInAsync(_usersService.GetClaimsPrincipleFromUser(_loggedInUser));
                 _usersService.UpdateBalanceByUserId(_loggedInUser.UserId, moneyAfterPurchase);
 
-                TempData["ConfirmationMessage"] = "Buying successful.";
+                TempData["ConfirmationMessage"] = $"Successful bought {(confirmViewModel.Amount > 1 ? $"{confirmViewModel.Amount}x copies" : "1x copy")} of {confirmViewModel.Symbol}.";
 
                 return RedirectToAction("Index", "Portfolio");
             }
@@ -133,7 +133,7 @@ namespace RealTimeStockSimulator.Controllers
                 await HttpContext.SignInAsync(_usersService.GetClaimsPrincipleFromUser(_loggedInUser));
                 _usersService.UpdateBalanceByUserId(_loggedInUser.UserId, moneyAfterSelling);
 
-                TempData["ConfirmationMessage"] = "Selling successful.";
+                TempData["ConfirmationMessage"] = $"Successful sold {(confirmViewModel.Amount > 1 ? $"{confirmViewModel.Amount}x copies" : "1x copy")} of {confirmViewModel.Symbol}.";
 
                 return RedirectToAction("Index", "Portfolio");
             }

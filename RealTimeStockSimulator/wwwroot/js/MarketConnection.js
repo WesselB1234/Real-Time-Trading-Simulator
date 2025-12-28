@@ -17,7 +17,7 @@ function setPriceLabelUpdateClass(priceLabel, isUp) {
     }
 }
 
-function setPriceLabelUpdatePrice(priceLabel, newPrice) {
+function setPriceLabelUpdatePrice(priceLabel, newPrice, textPrice) {
 
     const currentPrice = priceLabel.dataset.price;
 
@@ -28,7 +28,7 @@ function setPriceLabelUpdatePrice(priceLabel, newPrice) {
         setPriceLabelUpdateClass(priceLabel, false);
     }
 
-    priceLabel.textContent = formatPrice(newPrice);
+    priceLabel.textContent = formatPrice(textPrice);
     priceLabel.dataset.price = newPrice;
 }
 
@@ -45,12 +45,13 @@ function updatePriceLabels(updatedSymbol, newPrice) {
             const amountLabel = document.querySelector(
                 `[data-amount-label-symbol="${updatedSymbol}"][data-amount-label-number="${priceLabel.dataset.amountLabelNumber}"]`
             );
-
             const amount = parseInt(amountLabel.dataset.amountLabelValue);
-            newPrice *= amount;
-        }
 
-        setPriceLabelUpdatePrice(priceLabel, newPrice);
+            setPriceLabelUpdatePrice(priceLabel, newPrice, newPrice * amount);
+        }
+        else {
+            setPriceLabelUpdatePrice(priceLabel, newPrice, newPrice);
+        }
     }
 }
 
@@ -70,8 +71,8 @@ function updateOwnershipLabels(updatedSymbol, newPrice) {
 
     const TotalOwnershipValueLabels = document.getElementsByClassName("TotalOwnershipValue");
 
-    for (let totalOwnershipValueLabel of TotalOwnershipValueLabels) {
-        setPriceLabelUpdatePrice(totalOwnershipValueLabel, totalPriceOfOwnership);
+    for (const totalOwnershipValueLabel of TotalOwnershipValueLabels) {
+        setPriceLabelUpdatePrice(totalOwnershipValueLabel, totalPriceOfOwnership, totalPriceOfOwnership);
     }
 }
 
@@ -96,7 +97,7 @@ function updateMultiOwnershipLabels(updatedSymbol, newPrice) {
 
         const totalOwnershipValueLabels = document.querySelectorAll(`.TotalOwnershipValue[data-user-id="${user.UserId}"]`);
 
-        for (let totalOwnershipValueLabel of totalOwnershipValueLabels) {
+        for (const totalOwnershipValueLabel of totalOwnershipValueLabels) {
             setPriceLabelUpdatePrice(totalOwnershipValueLabel, totalPriceOfOwnership);
         }
     })

@@ -2,7 +2,7 @@
 
     if (newAmount > 0) {
         amountInput.dataset.amountLabelValue = newAmount;
-        totalValueLbl.textContent = FormatPrice(totalValueLbl.dataset.price * newAmount);
+        totalValueLbl.textContent = formatPrice(totalValueLbl.dataset.price * newAmount);
     }
 }
 
@@ -12,7 +12,7 @@ function initBuySellPriceSetter() {
     let totalValueLbl = document.getElementById("totalValueLbl");
 
     amountInput.addEventListener("input", (event) => {
-        OnAmountChanged(amountInput, totalValueLbl, Number(event.target.value));
+        onAmountChanged(amountInput, totalValueLbl, Number(event.target.value));
     });
 }
 
