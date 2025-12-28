@@ -47,10 +47,6 @@ down-price-update, td.down-price-update, span.down-price-update {
     flex: 1;
 }
 
-.leaderboard-table tbody tr {
-    transition: transform 0.3s ease;
-}
-
 @keyframes flash-green {
     0% {
         background-color: #00ff21;
