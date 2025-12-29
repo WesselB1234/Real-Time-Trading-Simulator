@@ -1,6 +1,0 @@
-﻿@{
-    @model RealTimeStockSimulator.Models.Tradable
-    @using static RealTimeStockSimulator.Models.Helpers.ImageEncoder
-}
-
-<img class="tradable-img" src="data:image/jpeg;base64,@(Model.Image != null ? GetBase64StringFromImageBytes(Model.Image) : "")" alt="Logo of name" />
