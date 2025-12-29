@@ -46,11 +46,11 @@ namespace RealTimeStockSimulator.Models.Helpers
                 ? null
                 : (string)reader["name"];
 
-            byte[]? image = GetIsNullReaderColumn(reader, "image")
+            string? imagePath = GetIsNullReaderColumn(reader, "image_path")
                 ? null
-                : (byte[])reader["image"];
+                : (string)reader["image_path"];
 
-            return new Tradable(symbol, name, image);
+            return new Tradable(symbol, name, imagePath);
         }
 
         public static OwnershipTradable MapOwnershipTradable(SqlDataReader reader)
@@ -61,13 +61,13 @@ namespace RealTimeStockSimulator.Models.Helpers
                 ? null
                 : (string)reader["name"];
 
-            byte[]? image = GetIsNullReaderColumn(reader, "image")
+            string? imagePath = GetIsNullReaderColumn(reader, "image_path")
                 ? null
-                : (byte[])reader["image"];
+                : (string)reader["image_path"];
 
             int amount = (int)reader["amount"];
 
-            return new OwnershipTradable(symbol, name, image, amount);
+            return new OwnershipTradable(symbol, name, imagePath, amount);
         }
 
         public static MarketTransactionTradable MapMarketTransactionTradable(SqlDataReader reader)
@@ -84,7 +84,7 @@ namespace RealTimeStockSimulator.Models.Helpers
 
         public static OwnershipTradable MapOwnershipTradableByTradable(Tradable tradable, int amount)
         {
-            return new OwnershipTradable(tradable.Symbol, tradable.Name, tradable.Image, amount);
+            return new OwnershipTradable(tradable.Symbol, tradable.Name, tradable.ImagePath, amount);
         }
     }
 }

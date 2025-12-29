@@ -16,7 +16,7 @@ namespace RealTimeStockSimulator.Repositories
             
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "SELECT Ownership.symbol, name, image, amount " +
+                string query = "SELECT Ownership.symbol, name, image_path, amount " +
                     "FROM Ownership " +
                     "JOIN Tradables ON Ownership.symbol = Tradables.symbol " +
                     "WHERE user_id = @UserId;";

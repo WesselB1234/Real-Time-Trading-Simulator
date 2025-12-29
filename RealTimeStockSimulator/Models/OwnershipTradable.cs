@@ -19,7 +19,7 @@ namespace RealTimeStockSimulator.Models
             }
         }
 
-        public OwnershipTradable(string symbol, string? name, byte[]? image, int amount) : base(symbol, name, image)
+        public OwnershipTradable(string symbol, string? name, string? imagePath, int amount) : base(symbol, name, imagePath)
         {
             Amount = amount;
         }

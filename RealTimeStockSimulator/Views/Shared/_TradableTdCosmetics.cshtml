@@ -4,6 +4,6 @@
 }
 
 <td>
-    <img class="tradable-img" src="@(Model.Image != null ? $"data:image/jpeg;base64,{GetBase64StringFromImageBytes(Model.Image)}" : "/img/PlaceholderAsset.png")" alt="Logo of @Model.Symbol" />
+    <img class="tradable-img" src="@(Model.ImagePath != null ? $"/img/{Model.ImagePath}" : "/img/Tradables/PlaceholderAsset.png")" alt="Logo of @Model.Symbol" />
     <span class="ps-1">@(Model.Name != null ? Model.Name : "Unknown name")</span>
 </td>

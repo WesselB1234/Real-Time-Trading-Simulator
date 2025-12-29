@@ -14,14 +14,13 @@ namespace RealTimeStockSimulator.Repositories
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "INSERT INTO Tradables(symbol, name, image) " +
-                    $"VALUES (@Symbol, @Name, @Image);" +
-                    "SELECT SCOPE_IDENTITY();";
+                string query = "INSERT INTO Tradables(symbol, name, image_path) " +
+                    $"VALUES (@Symbol, @Name, @ImagePath);";
                 SqlCommand command = new SqlCommand(query, connection);
 
                 command.Parameters.AddWithValue("@Symbol", tradable.Symbol);
                 command.Parameters.AddWithValue("@Name", (tradable.Name == null ? DBNull.Value : tradable.Name));
-                command.Parameters.Add("@Image", SqlDbType.VarBinary).Value = (tradable.Image == null ? DBNull.Value : tradable.Image);
+                command.Parameters.AddWithValue("@ImagePath", (tradable.ImagePath == null ? DBNull.Value : tradable.ImagePath));
 
                 command.Connection.Open();
 
@@ -35,7 +34,7 @@ namespace RealTimeStockSimulator.Repositories
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "SELECT symbol, name, image FROM Tradables";
+                string query = "SELECT symbol, name, image_path FROM Tradables";
                 SqlCommand command = new SqlCommand(query, connection);
 
                 command.Connection.Open();
@@ -56,7 +55,7 @@ namespace RealTimeStockSimulator.Repositories
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "SELECT symbol, name, image FROM Tradables WHERE symbol = @Symbol;";
+                string query = "SELECT symbol, name, image_path FROM Tradables WHERE symbol = @Symbol;";
                 SqlCommand command = new SqlCommand(query, connection);
 
                 command.Parameters.AddWithValue("@Symbol", symbol);

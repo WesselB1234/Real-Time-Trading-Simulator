@@ -484,3 +484,4 @@ $RECYCLE.BIN/
 *.swp
 /RealTimeStockSimulator/appsettings.json
 /RealTimeStockSimulator/appsettings.Development.json
+/RealTimeStockSimulator/wwwroot/img/Tradables
