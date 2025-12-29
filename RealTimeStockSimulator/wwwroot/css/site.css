@@ -31,11 +31,19 @@ footer {
     height: 90px;
     align-items: center;
     vertical-align: middle;
+    text-align: center;
+}
+
+.nav-link {
+    border-radius: 25px;
+}
+
+.nav-hover:hover {
+    background-color: #2dc992ff;
 }
 
 .nav-pill-enabled {
     background-color: var(--dark-primary-color);
-    border-radius: 25px;
 }
 
 .auth-main {

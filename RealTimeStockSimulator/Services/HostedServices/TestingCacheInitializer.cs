@@ -18,10 +18,10 @@ namespace RealTimeStockSimulator.Services.HostedServices
         } 
 
         public async Task StartAsync(CancellationToken cancellationToken)
-        {  
+        {
             //Console.WriteLine(
-            //    _tradablesService.AddTradable(new Tradable("TEST", "bruh", ImageEncoder.GetStringFromImagePath("C:\\Users\\stosi\\Desktop\\RealTimeTradingSimulator\\Rblx.jpg")))
-            //    );
+            //    _tradablesService.AddTradable(new Tradable("AMZN", "Amazon", ImageEncoder.GetBytesFromImagePath("C:\\Users\\stosi\\Desktop\\RealTimeTradingSimulator\\Rblx.jpg")))
+            //);
 
             foreach (Tradable tradable in _tradablesService.GetAllTradables())
             {
