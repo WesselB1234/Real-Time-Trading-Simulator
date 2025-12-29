@@ -26,19 +26,48 @@ namespace RealTimeStockSimulator.Models.Helpers
             return new UserAccount(userId, userName, email, money);
         }
 
+        private static bool GetIsNullReaderColumn(SqlDataReader reader, string columnName)
+        {
+            try
+            {
+                return reader.IsDBNull(reader.GetOrdinal(columnName));
+            }
+            catch (IndexOutOfRangeException)
+            {
+                return true;
+            }
+        }
+
         public static Tradable MapTradable(SqlDataReader reader)
         {
             string symbol = (string)reader["symbol"];
 
-            return new Tradable(symbol);
+            string? name = GetIsNullReaderColumn(reader, "name")
+                ? null
+                : (string)reader["name"];
+
+            byte[]? image = GetIsNullReaderColumn(reader, "image")
+                ? null
+                : (byte[])reader["image"];
+
+            return new Tradable(symbol, name, image);
         }
 
         public static OwnershipTradable MapOwnershipTradable(SqlDataReader reader)
         {
             string symbol = (string)reader["symbol"];
+
+            string? name = GetIsNullReaderColumn(reader, "name")
+                ? null
+                : (string)reader["symbol"];
+
+            byte[]? image = GetIsNullReaderColumn(reader, "image")
+                ? null
+                : (byte[])reader["image"];
+
             int amount = (int)reader["amount"];
 
-            return new OwnershipTradable(symbol, amount);
+            return new OwnershipTradable(symbol, name, image, amount);
         }
 
         public static MarketTransactionTradable MapMarketTransactionTradable(SqlDataReader reader)
@@ -55,7 +84,7 @@ namespace RealTimeStockSimulator.Models.Helpers
 
         public static OwnershipTradable MapOwnershipTradableByTradable(Tradable tradable, int amount)
         {
-            return new OwnershipTradable(tradable.Symbol, amount);
+            return new OwnershipTradable(tradable.Symbol, tradable.Name, tradable.Image, amount);
         }
     }
 }

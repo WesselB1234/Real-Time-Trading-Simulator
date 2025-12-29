@@ -1,4 +1,5 @@
 ﻿using RealTimeStockSimulator.Models;
+using RealTimeStockSimulator.Models.Helpers;
 using RealTimeStockSimulator.Repositories.Interfaces;
 using RealTimeStockSimulator.Services.Interfaces;
 
@@ -17,7 +18,11 @@ namespace RealTimeStockSimulator.Services.HostedServices
         } 
 
         public async Task StartAsync(CancellationToken cancellationToken)
-        {
+        {  
+            //Console.WriteLine(
+            //    _tradablesService.AddTradable(new Tradable("TEST", "bruh", ImageEncoder.GetStringFromImagePath("C:\\Users\\stosi\\Desktop\\RealTimeTradingSimulator\\Rblx.jpg")))
+            //    );
+
             foreach (Tradable tradable in _tradablesService.GetAllTradables())
             {
                 _priceInfosService.SetPriceInfosBySymbol(tradable.Symbol, new TradablePriceInfos(_random.Next(1,10000)));

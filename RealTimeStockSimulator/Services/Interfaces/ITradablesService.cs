@@ -6,6 +6,7 @@ namespace RealTimeStockSimulator.Services.Interfaces
     public interface ITradablesService
     {
         List<Tradable> GetAllTradables();
+        int AddTradable(Tradable tradable);
         Task<List<Tradable>> GetAllTradablesWithApiDataAsync(CancellationToken cancellationToken);
         Tradable GetTradableFromBuySellViewModel(ProcessBuySellVM confirmViewModel);
         Tradable? GetTradableBySymbol(string symbol);

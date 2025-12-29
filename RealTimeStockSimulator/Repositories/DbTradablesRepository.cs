@@ -2,6 +2,7 @@
 using RealTimeStockSimulator.Repositories.Interfaces;
 using Microsoft.Data.SqlClient;
 using RealTimeStockSimulator.Models.Helpers;
+using System.Data;
 
 namespace RealTimeStockSimulator.Repositories
 {
@@ -9,13 +10,32 @@ namespace RealTimeStockSimulator.Repositories
     {
         public DbTradablesRepository(IConfiguration configuration) : base(configuration) { }
 
+        public int AddTradable(Tradable tradable)
+        {
+            using (SqlConnection connection = new SqlConnection(_connectionString))
+            {
+                string query = "INSERT INTO Tradables(symbol, name, image) " +
+                    $"VALUES (@Symbol, @Name, @Image);" +
+                    "SELECT SCOPE_IDENTITY();";
+                SqlCommand command = new SqlCommand(query, connection);
+
+                command.Parameters.AddWithValue("@Symbol", tradable.Symbol);
+                command.Parameters.AddWithValue("@Name", tradable.Name);
+                command.Parameters.Add("@Image", SqlDbType.VarBinary).Value = tradable.Image;
+
+                command.Connection.Open();
+
+                return command.ExecuteNonQuery();
+            }
+        }
+
         public List<Tradable> GetAllTradables()
         {
             List<Tradable> tradables = new List<Tradable>();
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "SELECT symbol FROM Tradables";
+                string query = "SELECT symbol, name, image FROM Tradables";
                 SqlCommand command = new SqlCommand(query, connection);
 
                 command.Connection.Open();
@@ -36,7 +56,7 @@ namespace RealTimeStockSimulator.Repositories
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "SELECT symbol FROM Tradables WHERE symbol = @Symbol;";
+                string query = "SELECT symbol, name, image FROM Tradables WHERE symbol = @Symbol;";
                 SqlCommand command = new SqlCommand(query, connection);
 
                 command.Parameters.AddWithValue("@Symbol", symbol);

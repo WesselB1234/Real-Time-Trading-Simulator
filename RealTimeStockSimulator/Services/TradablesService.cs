@@ -18,6 +18,11 @@ namespace RealTimeStockSimulator.Services
             _tradablesRepository = tradablesRepository;
         }
 
+        public int AddTradable(Tradable tradable)
+        {
+            return _tradablesRepository.AddTradable(tradable);
+        }
+
         public List<Tradable> GetAllTradables()
         {
             List<Tradable> tradables = _tradablesRepository.GetAllTradables();

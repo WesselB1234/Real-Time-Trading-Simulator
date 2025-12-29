@@ -10,11 +10,11 @@ namespace RealTimeStockSimulator.Services
 {
     public class OwnershipsService : IOwnershipsService
     {
-        private IOwnershipsRepository _ownershipsRepository;
+        private IOwnershipRepository _ownershipsRepository;
         private IMarketTransactionsService _marketTransactionsService;
         private ITradablePriceInfosService _priceInfosService;
 
-        public OwnershipsService(IOwnershipsRepository ownershipsRepository, IMarketTransactionsService marketTransactionsService, ITradablePriceInfosService priceInfosService)
+        public OwnershipsService(IOwnershipRepository ownershipsRepository, IMarketTransactionsService marketTransactionsService, ITradablePriceInfosService priceInfosService)
         {
             _ownershipsRepository = ownershipsRepository;
             _marketTransactionsService = marketTransactionsService;

@@ -24,14 +24,8 @@ namespace RealTimeStockSimulator.Repositories
                 command.Parameters.AddWithValue("@Money", user.Money);
 
                 command.Connection.Open();
-                int? userId = Convert.ToInt32(command.ExecuteScalar());
 
-                if (userId == null)
-                {
-                    throw new Exception("Insert user did not return a valid user_id.");
-                }
-
-                return (int)userId;
+                return Convert.ToInt32(command.ExecuteScalar());
             }
         }
 

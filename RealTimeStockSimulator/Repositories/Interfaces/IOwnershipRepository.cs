@@ -2,7 +2,7 @@
 
 namespace RealTimeStockSimulator.Repositories.Interfaces
 {
-    public interface IOwnershipsRepository
+    public interface IOwnershipRepository
     {
         List<OwnershipTradable> GetAllOwnershipTradablesByUserId(int userId);
         MultiOwnership GetValueOrderedMultiOwnershipsPagnated(int pageSize, int currentPage);

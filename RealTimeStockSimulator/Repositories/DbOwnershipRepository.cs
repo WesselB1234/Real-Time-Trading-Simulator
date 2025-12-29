@@ -5,7 +5,7 @@ using RealTimeStockSimulator.Repositories.Interfaces;
 
 namespace RealTimeStockSimulator.Repositories
 {
-    public class DbOwnershipRepository : DbBaseRepository, IOwnershipsRepository
+    public class DbOwnershipRepository : DbBaseRepository, IOwnershipRepository
     {
         public DbOwnershipRepository(IConfiguration configuration) : base(configuration) { }
 

@@ -49,8 +49,8 @@
                 {
                     <tr>
                         <td>
-                            <img class="tradable-img" src="" alt="Logo of name" />
-                            <span class="tradable-name">testname</span>
+                            <partial name="_TradableImage" model=tradable />
+                            <span class="ps-1">@tradable.Name</span>
                         </td>
                         <td>
                             @tradable.Symbol

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using RealTimeStockSimulator.Hubs;
 using RealTimeStockSimulator.Models.Enums;
+using RealTimeStockSimulator.Models.Helpers;
 using RealTimeStockSimulator.Repositories;
 using RealTimeStockSimulator.Repositories.Interfaces;
 using RealTimeStockSimulator.Services;
@@ -23,7 +24,7 @@ namespace RealTimeStockSimulator
 
             builder.Services.AddSingleton<ITradablesRepository, DbTradablesRepository>();
             builder.Services.AddSingleton<IUsersRepository, DbUsersRepository>();
-            builder.Services.AddSingleton<IOwnershipsRepository, DbOwnershipRepository>();
+            builder.Services.AddSingleton<IOwnershipRepository, DbOwnershipRepository>();
             builder.Services.AddSingleton<IMarketTransactionsRepository, DbMarketTransactionsRepository>();
 
             CachingMode cachingMode = builder.Configuration.GetValue<CachingMode>("AppModes:CachingMode");
