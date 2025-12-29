@@ -48,7 +48,7 @@ namespace RealTimeStockSimulator.Controllers
             return View(registerViewModel);
         }
 
-        public IActionResult ProcessRegister(RegisterVM registerViewModel)
+        public async Task<IActionResult> ProcessRegister(RegisterVM registerViewModel)
         {
             try
             {
@@ -63,7 +63,7 @@ namespace RealTimeStockSimulator.Controllers
                 _usersService.AddUser(user);
                 TempData["ConfirmationMessage"] = "Successfully registered a new account.";
 
-                return RedirectToAction("Login");
+                return await ProcessLogin(new LoginVM(registerViewModel.UserName, registerViewModel.Password));
             }
             catch (Exception ex)
             {
