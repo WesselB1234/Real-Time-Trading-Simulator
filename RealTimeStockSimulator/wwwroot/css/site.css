@@ -79,6 +79,7 @@ table td {
     object-fit: cover;
     height: 40px;
     width: 40px;
+    border-radius: 7px;
 }
 
 @keyframes flash-green {
