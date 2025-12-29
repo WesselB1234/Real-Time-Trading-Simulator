@@ -59,7 +59,7 @@ namespace RealTimeStockSimulator.Models.Helpers
 
             string? name = GetIsNullReaderColumn(reader, "name")
                 ? null
-                : (string)reader["symbol"];
+                : (string)reader["name"];
 
             byte[]? image = GetIsNullReaderColumn(reader, "image")
                 ? null
