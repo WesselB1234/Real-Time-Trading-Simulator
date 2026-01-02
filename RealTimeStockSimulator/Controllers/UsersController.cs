@@ -2,30 +2,20 @@
 using RealTimeStockSimulator.Services.Interfaces;
 using RealTimeStockSimulator.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Filters;
 using RealTimeStockSimulator.Models.ViewModels;
 
 namespace RealTimeStockSimulator.Controllers
 {
     [Authorize]
-    public class UsersController : Controller
+    public class UsersController : AuthenticatedUserController
     {
         private IUsersService _usersService;
         private IOwnershipsService _ownershipsService;
-        private UserAccount _loggedInUser;
 
-        public UsersController(IUsersService usersService, IOwnershipsService ownershipsService)
+        public UsersController(IUsersService usersService, IOwnershipsService ownershipsService): base(usersService)
         {
             _usersService = usersService;
             _ownershipsService = ownershipsService;
-        }
-
-        public override void OnActionExecuting(ActionExecutingContext context)
-        {
-            _loggedInUser = _usersService.GetUserFromClaimsPrinciple(User);
-
-            ViewBag.loggedInUser = _loggedInUser;
-            base.OnActionExecuting(context);
         }
 
         public IActionResult Leaderboard()

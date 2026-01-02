@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
 using RealTimeStockSimulator.Models;
 using RealTimeStockSimulator.Models.ViewModels;
 using RealTimeStockSimulator.Services.Interfaces;
@@ -9,26 +8,17 @@ using RealTimeStockSimulator.Services.Interfaces;
 namespace RealTimeStockSimulator.Controllers
 {
     [Authorize]
-    public class TradablesController : Controller
+    public class TradablesController : AuthenticatedUserController
     {
         private ITradablesService _tradablesService;
         private IOwnershipsService _ownershipsService;
         private IUsersService _usersService;
-        private UserAccount _loggedInUser;
 
-        public TradablesController(ITradablesService tradablesService, IOwnershipsService ownershipsService, IUsersService usersService)
+        public TradablesController(ITradablesService tradablesService, IOwnershipsService ownershipsService, IUsersService usersService): base(usersService)
         {
             _tradablesService = tradablesService;
             _ownershipsService = ownershipsService;
             _usersService = usersService;
-        }
-
-        public override void OnActionExecuting(ActionExecutingContext context)
-        {
-            _loggedInUser = _usersService.GetUserFromClaimsPrinciple(User);
-
-            ViewBag.loggedInUser = _loggedInUser;
-            base.OnActionExecuting(context);
         }
 
         public IActionResult Index()
@@ -67,11 +57,11 @@ namespace RealTimeStockSimulator.Controllers
                 }
 
                 tradable = _tradablesService.GetTradableFromBuySellViewModel(confirmViewModel);
-                decimal moneyAfterPurchase = _ownershipsService.BuyTradable(_loggedInUser, tradable, (int)confirmViewModel.Amount);
+                decimal moneyAfterPurchase = _ownershipsService.BuyTradable(LoggedInUser, tradable, (int)confirmViewModel.Amount);
 
-                _loggedInUser.Money = moneyAfterPurchase;
-                await HttpContext.SignInAsync(_usersService.GetClaimsPrincipleFromUser(_loggedInUser));
-                _usersService.UpdateBalanceByUserId(_loggedInUser.UserId, moneyAfterPurchase);
+                LoggedInUser.Money = moneyAfterPurchase;
+                await HttpContext.SignInAsync(_usersService.GetClaimsPrincipleFromUser(LoggedInUser));
+                _usersService.UpdateBalanceByUserId(LoggedInUser.UserId, moneyAfterPurchase);
 
                 TempData["ConfirmationMessage"] = $"Successful bought {(confirmViewModel.Amount > 1 ? $"{confirmViewModel.Amount}x copies" : "1x copy")} of {confirmViewModel.Symbol}.";
 
@@ -102,7 +92,7 @@ namespace RealTimeStockSimulator.Controllers
                     confirmViewModel.Amount = 1;
                 }
 
-                OwnershipTradable? tradable = _ownershipsService.GetOwnershipTradableFromBuySellViewModel(confirmViewModel, _loggedInUser.UserId);
+                OwnershipTradable? tradable = _ownershipsService.GetOwnershipTradableFromBuySellViewModel(confirmViewModel, LoggedInUser.UserId);
                 SellVM viewModel = new SellVM(tradable, confirmViewModel.Amount);
 
                 return View(viewModel);
@@ -126,12 +116,12 @@ namespace RealTimeStockSimulator.Controllers
                     confirmViewModel.Amount = 1;
                 }
 
-                tradable = _ownershipsService.GetOwnershipTradableFromBuySellViewModel(confirmViewModel,_loggedInUser.UserId);
-                decimal moneyAfterSelling = _ownershipsService.SellTradable(_loggedInUser, tradable, (int)confirmViewModel.Amount);
+                tradable = _ownershipsService.GetOwnershipTradableFromBuySellViewModel(confirmViewModel,LoggedInUser.UserId);
+                decimal moneyAfterSelling = _ownershipsService.SellTradable(LoggedInUser, tradable, (int)confirmViewModel.Amount);
 
-                _loggedInUser.Money = moneyAfterSelling;
-                await HttpContext.SignInAsync(_usersService.GetClaimsPrincipleFromUser(_loggedInUser));
-                _usersService.UpdateBalanceByUserId(_loggedInUser.UserId, moneyAfterSelling);
+                LoggedInUser.Money = moneyAfterSelling;
+                await HttpContext.SignInAsync(_usersService.GetClaimsPrincipleFromUser(LoggedInUser));
+                _usersService.UpdateBalanceByUserId(LoggedInUser.UserId, moneyAfterSelling);
 
                 TempData["ConfirmationMessage"] = $"Successful sold {(confirmViewModel.Amount > 1 ? $"{confirmViewModel.Amount}x copies" : "1x copy")} of {confirmViewModel.Symbol}.";
 
