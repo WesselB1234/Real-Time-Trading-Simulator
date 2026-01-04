@@ -2,7 +2,6 @@
 using RealTimeStockSimulator.Repositories.Interfaces;
 using Microsoft.Data.SqlClient;
 using RealTimeStockSimulator.Models.Helpers;
-using System.Data;
 
 namespace RealTimeStockSimulator.Repositories
 {
@@ -14,13 +13,14 @@ namespace RealTimeStockSimulator.Repositories
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "INSERT INTO Tradables(symbol, name, image_path) " +
-                    $"VALUES (@Symbol, @Name, @ImagePath);";
+                string query = "INSERT INTO Tradables(symbol, name, image_path, type) " +
+                    $"VALUES (@Symbol, @Name, @ImagePath, @Type);";
                 SqlCommand command = new SqlCommand(query, connection);
 
                 command.Parameters.AddWithValue("@Symbol", tradable.Symbol);
                 command.Parameters.AddWithValue("@Name", (tradable.Name == null ? DBNull.Value : tradable.Name));
                 command.Parameters.AddWithValue("@ImagePath", (tradable.ImagePath == null ? DBNull.Value : tradable.ImagePath));
+                command.Parameters.AddWithValue("@Type", tradable.Type.ToString());
 
                 command.Connection.Open();
 
@@ -34,7 +34,7 @@ namespace RealTimeStockSimulator.Repositories
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "SELECT symbol, name, image_path FROM Tradables";
+                string query = "SELECT symbol, name, image_path, type FROM Tradables";
                 SqlCommand command = new SqlCommand(query, connection);
 
                 command.Connection.Open();
@@ -55,7 +55,7 @@ namespace RealTimeStockSimulator.Repositories
         {
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "SELECT symbol, name, image_path FROM Tradables WHERE symbol = @Symbol;";
+                string query = "SELECT symbol, name, image_path, type FROM Tradables WHERE symbol = @Symbol;";
                 SqlCommand command = new SqlCommand(query, connection);
 
                 command.Parameters.AddWithValue("@Symbol", symbol);

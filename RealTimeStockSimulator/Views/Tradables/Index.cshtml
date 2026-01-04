@@ -23,6 +23,9 @@
                     Symbol
                 </th>
                 <th>
+                    Type
+                </th>
+                <th>
                     Value
                 </th>
                 <th>
@@ -37,6 +40,9 @@
                     <partial name="_TradableTdCosmetics" model=tradable />
                     <td>
                         @tradable.Symbol
+                    </td>
+                    <td>
+                        @tradable.Type
                     </td>
                     <td data-price-symbol="@tradable.Symbol" data-price="@FormatDecimalToJsDecimal(tradable.TradablePriceInfos.Price)">
                         $@FormatDecimalPrice(tradable.TradablePriceInfos.Price)

@@ -43,8 +43,9 @@ namespace RealTimeStockSimulator.Repositories
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "SELECT TOP(@PageSize) transaction_id, symbol, price, status, amount, date " +
+                string query = "SELECT TOP(@PageSize) transaction_id, Transactions.symbol, price, status, amount, date, type " +
                    "FROM Transactions " +
+                   "JOIN Tradables ON Transactions.symbol = Tradables.symbol " +
                    "WHERE user_id = @UserId " +
                    "ORDER BY transaction_id DESC;";
                 SqlCommand command = new SqlCommand(query, connection);

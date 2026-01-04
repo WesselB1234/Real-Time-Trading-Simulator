@@ -17,19 +17,22 @@
         <thead class="table-dark">
             <tr>
                 <th>
-                    Transaction id
+                    Transaction ID
                 </th>
                 <th>
                     Symbol
                 </th>
                 <th>
-                    Value of symbol
+                    Type
                 </th>
                 <th>
-                    Total value
+                    Value
                 </th>
                 <th>
                     Amount
+                </th>
+                <th>
+                    Total value
                 </th>
                 <th>
                     Status
@@ -51,13 +54,16 @@
                             @transaction.Tradable.Symbol
                         </td>
                         <td>
+                            @transaction.Tradable.Type
+                        </td>
+                        <td>
                             $@FormatDecimalPrice(transaction.Price)
                         </td>
                         <td>
-                            $@FormatDecimalPrice(transaction.Price * transaction.Amount)
+                            @transaction.Amount
                         </td>
                         <td>
-                            @transaction.Amount
+                            $@FormatDecimalPrice(transaction.Price * transaction.Amount)
                         </td>
                         <td>
                             @transaction.Status

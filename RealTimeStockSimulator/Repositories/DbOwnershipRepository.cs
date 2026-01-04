@@ -2,7 +2,6 @@
 using RealTimeStockSimulator.Models;
 using RealTimeStockSimulator.Models.Helpers;
 using RealTimeStockSimulator.Repositories.Interfaces;
-using System.Threading.Tasks.Dataflow;
 
 namespace RealTimeStockSimulator.Repositories
 {
@@ -16,7 +15,7 @@ namespace RealTimeStockSimulator.Repositories
             
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "SELECT Ownership.symbol, name, image_path, amount " +
+                string query = "SELECT Ownership.symbol, name, image_path, amount, type " +
                     "FROM Ownership " +
                     "JOIN Tradables ON Ownership.symbol = Tradables.symbol " +
                     "WHERE user_id = @UserId;";
@@ -119,9 +118,9 @@ namespace RealTimeStockSimulator.Repositories
 
             using (SqlConnection connection = new SqlConnection(_connectionString))
             {
-                string query = "SELECT Ownership.user_id, username, email, [money], " +
-                    "symbol, amount " +
+                string query = "SELECT Ownership.user_id, Ownership.symbol, username, email, [money], amount, type " +
                     "FROM Ownership " +
+                    "JOIN Tradables ON Tradables.symbol = Ownership.symbol " +
                     "JOIN Users ON Ownership.user_id = Users.user_id " +
                     "ORDER BY Ownership.user_id;";
 

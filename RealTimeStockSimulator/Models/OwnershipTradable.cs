@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using RealTimeStockSimulator.Models.Enums;
+using System.Text.Json.Serialization;
 
 namespace RealTimeStockSimulator.Models
 {
@@ -19,7 +20,7 @@ namespace RealTimeStockSimulator.Models
             }
         }
 
-        public OwnershipTradable(string symbol, string? name, string? imagePath, int amount) : base(symbol, name, imagePath)
+        public OwnershipTradable(string symbol, string? name, string? imagePath, TradableType type, int amount) : base(symbol, name, imagePath, type)
         {
             Amount = amount;
         }
